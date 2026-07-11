@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Xcode user data
+**/xcuserdata/
+**/*.xcuserstate
+
+# Xcode build products
+build/
+DerivedData/
+
+# SwiftPM build artifacts
+.build/
+
+# Playground
+timeline.xctimeline
+playground.xcworkspace

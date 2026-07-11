@@ -1,5 +1,5 @@
 //
-//  PresentedNavigationHost.swift
+//  NavigationHost.swift
 //  ModularizedByFeature
 //
 //  Created by ali alhawas on 31/03/2026.
@@ -7,24 +7,28 @@
 
 import SwiftUI
 
-/// Hosts a newly presented navigation flow with its own internal coordinator.
+/// Hosts an existing navigation flow whose coordinator is owned externally.
 ///
 /// Use this for:
-/// - sheet flows
-/// - full-screen flows
-/// - nested modal navigation
-public struct PresentedNavigationHost: View {
-    @StateObject private var coordinator = NavigationCoordinator()
-    private let route: AnyRoute
+/// - app roots
+/// - tab roots
+/// - feature entry points
+@MainActor
+public struct NavigationHost<Root: View>: View {
+    @ObservedObject private var coordinator: NavigationCoordinator
+    private let root: Root
 
-    public init(route: AnyRoute) {
-        self.route = route
+    public init(
+        coordinator: NavigationCoordinator,
+        @ViewBuilder root: () -> Root
+    ) {
+        self.coordinator = coordinator
+        self.root = root()
     }
 
     public var body: some View {
         NavigationStack(path: $coordinator.routes) {
-            route
-                .makeView(coordinator: coordinator)
+            root
                 .navigationDestination(for: AnyRoute.self) { route in
                     route.makeView(coordinator: coordinator)
                 }
@@ -33,9 +37,11 @@ public struct PresentedNavigationHost: View {
                         .presentationDetents(item.configuration.detents)
                         .presentationDragIndicator(.visible)
                 }
+#if os(iOS)
                 .fullScreenCover(item: $coordinator.fullScreenRoute) { route in
                     PresentedNavigationHost(route: route)
                 }
+#endif
         }
     }
 }

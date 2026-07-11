@@ -13,8 +13,7 @@ import NavigationDestinations
 struct FeatureAListView: View {
 
     @EnvironmentObject var coordinator: NavigationCoordinator
-    @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         VStack {
             // MARK: Navigate
@@ -33,7 +32,7 @@ struct FeatureAListView: View {
             // MARK: Navigate
             Button {
                 let destination = FeatureBDestination.mainScreen
-                let route = RouteRegistry.shared.resolve(destination)
+                guard let route = RouteRegistry.shared.resolve(destination) else { return }
                 coordinator.navigate(to: route)
             } label: {
                 Text("Feature (B)")
@@ -45,7 +44,6 @@ struct FeatureAListView: View {
             }
             
             Button {
-                dismiss()
                 coordinator.pop()
             } label: {
                 Text("Back")
@@ -67,6 +65,7 @@ struct FeatureAListView: View {
 struct FeatureADetailView: View {
     
     @EnvironmentObject var coordinator: NavigationCoordinator
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack {
@@ -81,19 +80,9 @@ struct FeatureADetailView: View {
                     .cornerRadius(8)
             }
             
-            Button {
-                coordinator.presentSheet(FeatureARoute.mainScreen, detents: [.height(300), .medium])
-            } label: {
-                Text("Present")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-            
             Spacer()
             Button {
+                dismiss()
                 coordinator.pop()
             } label: {
                 Text("Back")
@@ -178,7 +167,7 @@ struct FeatureASubSubDetailView: View {
             }
                  
             Button {
-                coordinator.presentFullScreen(FeatureARoute.mainScreen)
+                coordinator.presentFullScreen(FeatureARoute.firstScreen)
             } label: {
                 Text("Present Full Screen")
                     .padding()

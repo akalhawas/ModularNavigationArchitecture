@@ -10,6 +10,7 @@ import SwiftUI
 /// Maps `NavigationDestination` to `AnyRoute` using registered builders.
 ///
 /// Enables cross-feature navigation without direct feature dependencies.
+@MainActor
 public final class RouteRegistry {
     
     /// Shared registry instance.
@@ -34,9 +35,10 @@ public final class RouteRegistry {
     }
     
     /// Resolves a destination into its corresponding route.
-    public func resolve<D: NavigationDestination>(_ destination: D) -> AnyRoute {
+    public func resolve<D: NavigationDestination>(_ destination: D) -> AnyRoute? {
         guard let route = builders[ObjectIdentifier(D.self)]?(destination) else {
-            fatalError("No route registered for \(D.self)")
+            assertionFailure("No route registered for \(D.self)")
+            return nil
         }
         return route
     }
@@ -45,5 +47,6 @@ public final class RouteRegistry {
 /// Defines a feature module that registers its navigation configuration.
 public protocol FeatureModule {
     /// Registers routes and other feature navigation components.
+    @MainActor
     static func register()
 }

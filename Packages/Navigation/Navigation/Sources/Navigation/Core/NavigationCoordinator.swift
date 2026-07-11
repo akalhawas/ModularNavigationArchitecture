@@ -13,14 +13,13 @@ import Combine
 /// Use one coordinator per independent navigation stack.
 /// - For root or tab flows: inject and own it from outside.
 /// - For presented modal flows: create a fresh coordinator internally.
+///
+@MainActor
 public final class NavigationCoordinator: ObservableObject {
     
     @Published public var routes: [AnyRoute] = []
     @Published public var fullScreenRoute: AnyRoute?
     @Published public var sheetItem: PresentedSheetRoute?
-
-    /// Set by a parent coordinator to handle navigation that should escape this stack (e.g. hide tab bar).
-    public var navigateToMain: ((AnyRoute) -> Void)?
 
     public init() {}
 

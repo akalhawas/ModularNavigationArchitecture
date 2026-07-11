@@ -7,103 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2304AFEA3000D2FE00423F1C /* Navigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304AFE43000D2FE00423F1C /* Navigation.framework */; };
-		2304B0003000D33600423F1C /* NavigationDestinations.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304AFFA3000D33600423F1C /* NavigationDestinations.framework */; };
-		2304B0103000D36E00423F1C /* FeatureA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304B00A3000D36E00423F1C /* FeatureA.framework */; };
-		2304B0203000D38500423F1C /* FeatureB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304B01A3000D38500423F1C /* FeatureB.framework */; };
-		2304B07A3000D5B900423F1C /* Navigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304AFE43000D2FE00423F1C /* Navigation.framework */; };
-		2304B07F3000D5C100423F1C /* Navigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304AFE43000D2FE00423F1C /* Navigation.framework */; };
-		2304B0843000D5C500423F1C /* Navigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304AFE43000D2FE00423F1C /* Navigation.framework */; };
-		2304B0893000D5C900423F1C /* NavigationDestinations.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304AFFA3000D33600423F1C /* NavigationDestinations.framework */; };
-		2304B08D3000D5CE00423F1C /* NavigationDestinations.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2304AFFA3000D33600423F1C /* NavigationDestinations.framework */; };
 		2304B0993000DDD300423F1C /* ModularNavigationExample-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */; };
+		234696E430024F9800E903E3 /* FeatureA in Frameworks */ = {isa = PBXBuildFile; productRef = 234696E330024F9800E903E3 /* FeatureA */; };
+		234696E730024F9D00E903E3 /* FeatureB in Frameworks */ = {isa = PBXBuildFile; productRef = 234696E630024F9D00E903E3 /* FeatureB */; };
+		234696EA30024FA200E903E3 /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 234696E930024FA200E903E3 /* Navigation */; };
+		234696ED30024FA800E903E3 /* NavigationDestinations in Frameworks */ = {isa = PBXBuildFile; productRef = 234696EC30024FA800E903E3 /* NavigationDestinations */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		2304AFE83000D2FE00423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304AFE33000D2FE00423F1C;
-			remoteInfo = Navigation;
-		};
-		2304AFFE3000D33600423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304AFF93000D33600423F1C;
-			remoteInfo = NavigationDestinations;
-		};
-		2304B00E3000D36E00423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304B0093000D36E00423F1C;
-			remoteInfo = FeatureA;
-		};
-		2304B01E3000D38500423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304B0193000D38500423F1C;
-			remoteInfo = FeatureB;
-		};
-		2304B07C3000D5B900423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304AFE33000D2FE00423F1C;
-			remoteInfo = Navigation;
-		};
-		2304B0813000D5C100423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304AFE33000D2FE00423F1C;
-			remoteInfo = Navigation;
-		};
-		2304B0863000D5C500423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304AFE33000D2FE00423F1C;
-			remoteInfo = Navigation;
-		};
-		2304B08B3000D5C900423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304AFF93000D33600423F1C;
-			remoteInfo = NavigationDestinations;
-		};
-		2304B08F3000D5CE00423F1C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2304AFC83000D14D00423F1C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2304AFF93000D33600423F1C;
-			remoteInfo = NavigationDestinations;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2304AFD03000D14D00423F1C /* ModularNavigationExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ModularNavigationExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2304AFE43000D2FE00423F1C /* Navigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Navigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2304AFFA3000D33600423F1C /* NavigationDestinations.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NavigationDestinations.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2304B00A3000D36E00423F1C /* FeatureA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FeatureA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2304B01A3000D38500423F1C /* FeatureB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FeatureB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ModularNavigationExample-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2304B0643000D46500423F1C /* Exceptions for "Presentation" folder in "FeatureA" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Home/HomeView.swift,
-				Services/ServicesView.swift,
-				Tapbar/TabBarView.swift,
-			);
-			target = 2304B0093000D36E00423F1C /* FeatureA */;
-		};
 		2304B0663000D46800423F1C /* Exceptions for "Presentation" folder in "ModularNavigationExample" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -113,60 +29,25 @@
 			);
 			target = 2304AFCF3000D14D00423F1C /* ModularNavigationExample */;
 		};
-		2304B0913000D64D00423F1C /* Exceptions for "Features" folder in "FeatureA" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				FeatureB/Navigation/FeatureBDeepLinkMapper.swift,
-				FeatureB/Navigation/FeatureBRouteRegister.swift,
-				FeatureB/Navigation/FeatureBRoutes.swift,
-				FeatureB/Presentation/FeatureBView.swift,
-			);
-			target = 2304B0093000D36E00423F1C /* FeatureA */;
-		};
-		2304B0933000D65000423F1C /* Exceptions for "Features" folder in "FeatureB" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				FeatureB/Navigation/FeatureBDeepLinkMapper.swift,
-				FeatureB/Navigation/FeatureBRouteRegister.swift,
-				FeatureB/Navigation/FeatureBRoutes.swift,
-				FeatureB/Presentation/FeatureBView.swift,
-			);
-			target = 2304B0193000D38500423F1C /* FeatureB */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		2304AFE53000D2FE00423F1C /* Navigation */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Navigation;
-			sourceTree = "<group>";
-		};
 		2304AFF23000D31D00423F1C /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = App;
-			sourceTree = "<group>";
-		};
-		2304AFFB3000D33600423F1C /* NavigationDestinations */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NavigationDestinations;
-			sourceTree = "<group>";
-		};
-		2304B0503000D3E800423F1C /* Features */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				2304B0913000D64D00423F1C /* Exceptions for "Features" folder in "FeatureA" target */,
-				2304B0933000D65000423F1C /* Exceptions for "Features" folder in "FeatureB" target */,
-			);
-			path = Features;
 			sourceTree = "<group>";
 		};
 		2304B0603000D41300423F1C /* Presentation */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				2304B0663000D46800423F1C /* Exceptions for "Presentation" folder in "ModularNavigationExample" target */,
-				2304B0643000D46500423F1C /* Exceptions for "Presentation" folder in "FeatureA" target */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		234696E130024F5500E903E3 /* Packages */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -176,43 +57,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2304B0203000D38500423F1C /* FeatureB.framework in Frameworks */,
-				2304B0003000D33600423F1C /* NavigationDestinations.framework in Frameworks */,
-				2304B0103000D36E00423F1C /* FeatureA.framework in Frameworks */,
-				2304AFEA3000D2FE00423F1C /* Navigation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304AFE13000D2FE00423F1C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304AFF73000D33600423F1C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2304B07A3000D5B900423F1C /* Navigation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0073000D36E00423F1C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2304B08D3000D5CE00423F1C /* NavigationDestinations.framework in Frameworks */,
-				2304B07F3000D5C100423F1C /* Navigation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0173000D38500423F1C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2304B0893000D5C900423F1C /* NavigationDestinations.framework in Frameworks */,
-				2304B0843000D5C500423F1C /* Navigation.framework in Frameworks */,
+				234696EA30024FA200E903E3 /* Navigation in Frameworks */,
+				234696E730024F9D00E903E3 /* FeatureB in Frameworks */,
+				234696E430024F9800E903E3 /* FeatureA in Frameworks */,
+				234696ED30024FA800E903E3 /* NavigationDestinations in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,9 +73,7 @@
 				2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */,
 				2304AFF23000D31D00423F1C /* App */,
 				2304B0603000D41300423F1C /* Presentation */,
-				2304B0503000D3E800423F1C /* Features */,
-				2304AFE53000D2FE00423F1C /* Navigation */,
-				2304AFFB3000D33600423F1C /* NavigationDestinations */,
+				234696E130024F5500E903E3 /* Packages */,
 				2304B0793000D5B900423F1C /* Frameworks */,
 				2304AFD13000D14D00423F1C /* Products */,
 			);
@@ -237,10 +83,6 @@
 			isa = PBXGroup;
 			children = (
 				2304AFD03000D14D00423F1C /* ModularNavigationExample.app */,
-				2304AFE43000D2FE00423F1C /* Navigation.framework */,
-				2304AFFA3000D33600423F1C /* NavigationDestinations.framework */,
-				2304B00A3000D36E00423F1C /* FeatureA.framework */,
-				2304B01A3000D38500423F1C /* FeatureB.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -254,37 +96,6 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		2304AFDF3000D2FE00423F1C /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304AFF53000D33600423F1C /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0053000D36E00423F1C /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0153000D38500423F1C /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		2304AFCF3000D14D00423F1C /* ModularNavigationExample */ = {
 			isa = PBXNativeTarget;
@@ -297,115 +108,20 @@
 			buildRules = (
 			);
 			dependencies = (
-				2304AFE93000D2FE00423F1C /* PBXTargetDependency */,
-				2304AFFF3000D33600423F1C /* PBXTargetDependency */,
-				2304B00F3000D36E00423F1C /* PBXTargetDependency */,
-				2304B01F3000D38500423F1C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				2304AFF23000D31D00423F1C /* App */,
 			);
 			name = ModularNavigationExample;
 			packageProductDependencies = (
+				234696E330024F9800E903E3 /* FeatureA */,
+				234696E630024F9D00E903E3 /* FeatureB */,
+				234696E930024FA200E903E3 /* Navigation */,
+				234696EC30024FA800E903E3 /* NavigationDestinations */,
 			);
 			productName = ModularNavigationExample;
 			productReference = 2304AFD03000D14D00423F1C /* ModularNavigationExample.app */;
 			productType = "com.apple.product-type.application";
-		};
-		2304AFE33000D2FE00423F1C /* Navigation */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2304AFEC3000D2FE00423F1C /* Build configuration list for PBXNativeTarget "Navigation" */;
-			buildPhases = (
-				2304AFDF3000D2FE00423F1C /* Headers */,
-				2304AFE03000D2FE00423F1C /* Sources */,
-				2304AFE13000D2FE00423F1C /* Frameworks */,
-				2304AFE23000D2FE00423F1C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				2304AFE53000D2FE00423F1C /* Navigation */,
-			);
-			name = Navigation;
-			packageProductDependencies = (
-			);
-			productName = Navigation;
-			productReference = 2304AFE43000D2FE00423F1C /* Navigation.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		2304AFF93000D33600423F1C /* NavigationDestinations */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2304B0023000D33600423F1C /* Build configuration list for PBXNativeTarget "NavigationDestinations" */;
-			buildPhases = (
-				2304AFF53000D33600423F1C /* Headers */,
-				2304AFF63000D33600423F1C /* Sources */,
-				2304AFF73000D33600423F1C /* Frameworks */,
-				2304AFF83000D33600423F1C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2304B07D3000D5B900423F1C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				2304AFFB3000D33600423F1C /* NavigationDestinations */,
-			);
-			name = NavigationDestinations;
-			packageProductDependencies = (
-			);
-			productName = NavigationDestinations;
-			productReference = 2304AFFA3000D33600423F1C /* NavigationDestinations.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		2304B0093000D36E00423F1C /* FeatureA */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2304B0123000D36E00423F1C /* Build configuration list for PBXNativeTarget "FeatureA" */;
-			buildPhases = (
-				2304B0053000D36E00423F1C /* Headers */,
-				2304B0063000D36E00423F1C /* Sources */,
-				2304B0073000D36E00423F1C /* Frameworks */,
-				2304B0083000D36E00423F1C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2304B0823000D5C100423F1C /* PBXTargetDependency */,
-				2304B0903000D5CE00423F1C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				2304B0503000D3E800423F1C /* Features */,
-				2304B0603000D41300423F1C /* Presentation */,
-			);
-			name = FeatureA;
-			packageProductDependencies = (
-			);
-			productName = FeatureA;
-			productReference = 2304B00A3000D36E00423F1C /* FeatureA.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		2304B0193000D38500423F1C /* FeatureB */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2304B0223000D38500423F1C /* Build configuration list for PBXNativeTarget "FeatureB" */;
-			buildPhases = (
-				2304B0153000D38500423F1C /* Headers */,
-				2304B0163000D38500423F1C /* Sources */,
-				2304B0173000D38500423F1C /* Frameworks */,
-				2304B0183000D38500423F1C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2304B0873000D5C500423F1C /* PBXTargetDependency */,
-				2304B08C3000D5C900423F1C /* PBXTargetDependency */,
-			);
-			name = FeatureB;
-			packageProductDependencies = (
-			);
-			productName = FeatureB;
-			productReference = 2304B01A3000D38500423F1C /* FeatureB.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -420,18 +136,6 @@
 					2304AFCF3000D14D00423F1C = {
 						CreatedOnToolsVersion = 26.3;
 					};
-					2304AFE33000D2FE00423F1C = {
-						CreatedOnToolsVersion = 26.3;
-					};
-					2304AFF93000D33600423F1C = {
-						CreatedOnToolsVersion = 26.3;
-					};
-					2304B0093000D36E00423F1C = {
-						CreatedOnToolsVersion = 26.3;
-					};
-					2304B0193000D38500423F1C = {
-						CreatedOnToolsVersion = 26.3;
-					};
 				};
 			};
 			buildConfigurationList = 2304AFCB3000D14D00423F1C /* Build configuration list for PBXProject "ModularNavigationExample" */;
@@ -443,16 +147,18 @@
 			);
 			mainGroup = 2304AFC73000D14D00423F1C;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				234696E230024F9800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureA" */,
+				234696E530024F9D00E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureB" */,
+				234696E830024FA200E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Navigation/Navigation" */,
+				234696EB30024FA800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/NavigationDestinations/NavigationDestinations" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2304AFD13000D14D00423F1C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				2304AFCF3000D14D00423F1C /* ModularNavigationExample */,
-				2304B0093000D36E00423F1C /* FeatureA */,
-				2304B0193000D38500423F1C /* FeatureB */,
-				2304AFE33000D2FE00423F1C /* Navigation */,
-				2304AFF93000D33600423F1C /* NavigationDestinations */,
 			);
 		};
 /* End PBXProject section */
@@ -466,34 +172,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2304AFE23000D2FE00423F1C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304AFF83000D33600423F1C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0083000D36E00423F1C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0183000D38500423F1C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -504,83 +182,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2304AFE03000D2FE00423F1C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304AFF63000D33600423F1C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0063000D36E00423F1C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2304B0163000D38500423F1C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		2304AFE93000D2FE00423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304AFE33000D2FE00423F1C /* Navigation */;
-			targetProxy = 2304AFE83000D2FE00423F1C /* PBXContainerItemProxy */;
-		};
-		2304AFFF3000D33600423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304AFF93000D33600423F1C /* NavigationDestinations */;
-			targetProxy = 2304AFFE3000D33600423F1C /* PBXContainerItemProxy */;
-		};
-		2304B00F3000D36E00423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304B0093000D36E00423F1C /* FeatureA */;
-			targetProxy = 2304B00E3000D36E00423F1C /* PBXContainerItemProxy */;
-		};
-		2304B01F3000D38500423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304B0193000D38500423F1C /* FeatureB */;
-			targetProxy = 2304B01E3000D38500423F1C /* PBXContainerItemProxy */;
-		};
-		2304B07D3000D5B900423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304AFE33000D2FE00423F1C /* Navigation */;
-			targetProxy = 2304B07C3000D5B900423F1C /* PBXContainerItemProxy */;
-		};
-		2304B0823000D5C100423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304AFE33000D2FE00423F1C /* Navigation */;
-			targetProxy = 2304B0813000D5C100423F1C /* PBXContainerItemProxy */;
-		};
-		2304B0873000D5C500423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304AFE33000D2FE00423F1C /* Navigation */;
-			targetProxy = 2304B0863000D5C500423F1C /* PBXContainerItemProxy */;
-		};
-		2304B08C3000D5C900423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304AFF93000D33600423F1C /* NavigationDestinations */;
-			targetProxy = 2304B08B3000D5C900423F1C /* PBXContainerItemProxy */;
-		};
-		2304B0903000D5CE00423F1C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2304AFF93000D33600423F1C /* NavigationDestinations */;
-			targetProxy = 2304B08F3000D5CE00423F1C /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2304AFD93000D14E00423F1C /* Debug */ = {
@@ -770,318 +372,6 @@
 			};
 			name = Release;
 		};
-		2304AFED3000D2FE00423F1C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.Navigation;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		2304AFEE3000D2FE00423F1C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.Navigation;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		2304B0033000D33600423F1C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.NavigationDestinations;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		2304B0043000D33600423F1C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.NavigationDestinations;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		2304B0133000D36E00423F1C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.FeatureA;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		2304B0143000D36E00423F1C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.FeatureA;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		2304B0233000D38500423F1C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.FeatureB;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		2304B0243000D38500423F1C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5JKZDTN9RT;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.akalhawas.FeatureB;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1103,43 +393,45 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2304AFEC3000D2FE00423F1C /* Build configuration list for PBXNativeTarget "Navigation" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2304AFED3000D2FE00423F1C /* Debug */,
-				2304AFEE3000D2FE00423F1C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2304B0023000D33600423F1C /* Build configuration list for PBXNativeTarget "NavigationDestinations" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2304B0033000D33600423F1C /* Debug */,
-				2304B0043000D33600423F1C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2304B0123000D36E00423F1C /* Build configuration list for PBXNativeTarget "FeatureA" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2304B0133000D36E00423F1C /* Debug */,
-				2304B0143000D36E00423F1C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2304B0223000D38500423F1C /* Build configuration list for PBXNativeTarget "FeatureB" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2304B0233000D38500423F1C /* Debug */,
-				2304B0243000D38500423F1C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		234696E230024F9800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureA" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Apps/ModularizedByFeature/Packages/Features/FeatureA;
+		};
+		234696E530024F9D00E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureB" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Apps/ModularizedByFeature/Packages/Features/FeatureB;
+		};
+		234696E830024FA200E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Navigation/Navigation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Apps/ModularizedByFeature/Packages/Navigation/Navigation;
+		};
+		234696EB30024FA800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/NavigationDestinations/NavigationDestinations" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Apps/ModularizedByFeature/Packages/NavigationDestinations/NavigationDestinations;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		234696E330024F9800E903E3 /* FeatureA */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FeatureA;
+		};
+		234696E630024F9D00E903E3 /* FeatureB */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FeatureB;
+		};
+		234696E930024FA200E903E3 /* Navigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Navigation;
+		};
+		234696EC30024FA800E903E3 /* NavigationDestinations */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NavigationDestinations;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2304AFC83000D14D00423F1C /* Project object */;
 }

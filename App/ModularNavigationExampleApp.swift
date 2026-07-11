@@ -51,6 +51,7 @@ enum AppComposition {
     )
 }
 
+@MainActor
 final class MainCoordinator: ObservableObject {
 
     @Published var selectedTab: TabBar = .home
@@ -62,10 +63,9 @@ final class MainCoordinator: ObservableObject {
     init() { }
 
     func handleExternalNavigation(to destination: any NavigationDestination) {
-        let route = RouteRegistry.shared.resolve(destination)
-
         switch destination {
         case is FeatureBDestination:
+            guard let route = RouteRegistry.shared.resolve(destination) else { return }
             selectedTab = .services
             servicesCoordinator.navigate(to: route, strategy: .resetStack)
         default:

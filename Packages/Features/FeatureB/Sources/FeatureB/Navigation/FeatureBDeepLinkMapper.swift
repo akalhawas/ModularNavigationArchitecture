@@ -11,7 +11,7 @@ import NavigationDestinations
 
 public struct FeatureBDeepLinkMapper: DeepLinkMapper {
     
-    // xcrun simctl openurl booted "com.ali.modularizedbyfeature://featureB/subDetail?id=123"
+    // xcrun simctl openurl booted "com.ali.ModularNavigationExample://featureB/subDetail?id=123"
     
     public init() {}
     public func map(url: URL) -> (any NavigationDestination)? {

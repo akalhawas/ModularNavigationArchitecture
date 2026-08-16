@@ -8,10 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		2304B0993000DDD300423F1C /* ModularNavigationExample-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */; };
-		234696E430024F9800E903E3 /* FeatureA in Frameworks */ = {isa = PBXBuildFile; productRef = 234696E330024F9800E903E3 /* FeatureA */; };
-		234696E730024F9D00E903E3 /* FeatureB in Frameworks */ = {isa = PBXBuildFile; productRef = 234696E630024F9D00E903E3 /* FeatureB */; };
-		234696EA30024FA200E903E3 /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 234696E930024FA200E903E3 /* Navigation */; };
-		234696ED30024FA800E903E3 /* NavigationDestinations in Frameworks */ = {isa = PBXBuildFile; productRef = 234696EC30024FA800E903E3 /* NavigationDestinations */; };
+		23CCDD3730323DEB00A71BDF /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 23CCDD3630323DEB00A71BDF /* Navigation */; };
+		23CCDD3930323DEB00A71BDF /* NetworkService in Frameworks */ = {isa = PBXBuildFile; productRef = 23CCDD3830323DEB00A71BDF /* NetworkService */; };
+		304C76E128AB83F48EB02E1D /* Colors in Frameworks */ = {isa = PBXBuildFile; productRef = D943939286F2A57637B5BC22 /* Colors */; };
+		5D9971EB70F1EBFA518E3C94 /* UsersAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 8DEBAC1DAB1C598EFBBFF11C /* UsersAPI */; };
+		672CACBD83C61F4B073BE0D1 /* Users in Frameworks */ = {isa = PBXBuildFile; productRef = A39498E0C0240584D82614C3 /* Users */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +26,7 @@
 			membershipExceptions = (
 				Home/HomeView.swift,
 				Services/ServicesView.swift,
-				Tapbar/TabBarView.swift,
+				Tabbar/TabBarView.swift,
 			);
 			target = 2304AFCF3000D14D00423F1C /* ModularNavigationExample */;
 		};
@@ -34,6 +35,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2304AFF23000D31D00423F1C /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = App;
 			sourceTree = "<group>";
 		};
@@ -47,7 +50,16 @@
 		};
 		234696E130024F5500E903E3 /* Packages */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = Packages;
+			sourceTree = "<group>";
+		};
+		23CCDD3D30323E9100A71BDF /* AppDependencies */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = AppDependencies;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -57,10 +69,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				234696EA30024FA200E903E3 /* Navigation in Frameworks */,
-				234696E730024F9D00E903E3 /* FeatureB in Frameworks */,
-				234696E430024F9800E903E3 /* FeatureA in Frameworks */,
-				234696ED30024FA800E903E3 /* NavigationDestinations in Frameworks */,
+				23CCDD3730323DEB00A71BDF /* Navigation in Frameworks */,
+				23CCDD3930323DEB00A71BDF /* NetworkService in Frameworks */,
+				304C76E128AB83F48EB02E1D /* Colors in Frameworks */,
+				672CACBD83C61F4B073BE0D1 /* Users in Frameworks */,
+				5D9971EB70F1EBFA518E3C94 /* UsersAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */,
+				23CCDD3D30323E9100A71BDF /* AppDependencies */,
 				2304AFF23000D31D00423F1C /* App */,
 				2304B0603000D41300423F1C /* Presentation */,
 				234696E130024F5500E903E3 /* Packages */,
@@ -111,13 +125,15 @@
 			);
 			fileSystemSynchronizedGroups = (
 				2304AFF23000D31D00423F1C /* App */,
+				23CCDD3D30323E9100A71BDF /* AppDependencies */,
 			);
 			name = ModularNavigationExample;
 			packageProductDependencies = (
-				234696E330024F9800E903E3 /* FeatureA */,
-				234696E630024F9D00E903E3 /* FeatureB */,
-				234696E930024FA200E903E3 /* Navigation */,
-				234696EC30024FA800E903E3 /* NavigationDestinations */,
+				23CCDD3630323DEB00A71BDF /* Navigation */,
+				23CCDD3830323DEB00A71BDF /* NetworkService */,
+				D943939286F2A57637B5BC22 /* Colors */,
+				A39498E0C0240584D82614C3 /* Users */,
+				8DEBAC1DAB1C598EFBBFF11C /* UsersAPI */,
 			);
 			productName = ModularNavigationExample;
 			productReference = 2304AFD03000D14D00423F1C /* ModularNavigationExample.app */;
@@ -148,10 +164,9 @@
 			mainGroup = 2304AFC73000D14D00423F1C;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				234696E230024F9800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureA" */,
-				234696E530024F9D00E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureB" */,
-				234696E830024FA200E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Navigation/Navigation" */,
-				234696EB30024FA800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/NavigationDestinations/NavigationDestinations" */,
+				23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */,
+				0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Colors" */,
+				6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2304AFD13000D14D00423F1C /* Products */;
@@ -396,40 +411,52 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		234696E230024F9800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureA" */ = {
+		0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Colors" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../Apps/ModularizedByFeature/Packages/Features/FeatureA;
+			relativePath = Packages/Features/Colors;
 		};
-		234696E530024F9D00E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Features/FeatureB" */ = {
+		6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../Apps/ModularizedByFeature/Packages/Features/FeatureB;
-		};
-		234696E830024FA200E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/Navigation/Navigation" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../Apps/ModularizedByFeature/Packages/Navigation/Navigation;
-		};
-		234696EB30024FA800E903E3 /* XCLocalSwiftPackageReference "../../Apps/ModularizedByFeature/Packages/NavigationDestinations/NavigationDestinations" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../Apps/ModularizedByFeature/Packages/NavigationDestinations/NavigationDestinations;
+			relativePath = Packages/Features/Users;
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/akalhawas/SharedLibraries.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		234696E330024F9800E903E3 /* FeatureA */ = {
+		23CCDD3630323DEB00A71BDF /* Navigation */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = FeatureA;
-		};
-		234696E630024F9D00E903E3 /* FeatureB */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FeatureB;
-		};
-		234696E930024FA200E903E3 /* Navigation */ = {
-			isa = XCSwiftPackageProductDependency;
+			package = 23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */;
 			productName = Navigation;
 		};
-		234696EC30024FA800E903E3 /* NavigationDestinations */ = {
+		23CCDD3830323DEB00A71BDF /* NetworkService */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = NavigationDestinations;
+			package = 23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */;
+			productName = NetworkService;
+		};
+		8DEBAC1DAB1C598EFBBFF11C /* UsersAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */;
+			productName = UsersAPI;
+		};
+		A39498E0C0240584D82614C3 /* Users */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */;
+			productName = Users;
+		};
+		D943939286F2A57637B5BC22 /* Colors */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Colors" */;
+			productName = Colors;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

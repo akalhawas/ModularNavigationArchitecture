@@ -6,20 +6,19 @@
 //
 
 import SwiftUI
-import FeatureA
-import FeatureB
 import Navigation
 
 struct ServicesView: View {
     
     @EnvironmentObject var coordinator: MainCoordinator
     
+    @State private var showSheet: Bool = false
     var body: some View {
         VStack {
             Button {
-                coordinator.servicesCoordinator.navigate(to: FeatureARoute.mainScreen)
+                coordinator.navigateToUsers(coordinator: coordinator.servicesCoordinator)
             } label: {
-                Text("Feature A")
+                Text("Users")
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color.gray)
@@ -28,17 +27,19 @@ struct ServicesView: View {
             }
 
             Button {
-                coordinator.servicesCoordinator.navigate(to: FeatureBRoute.mainScreen)
+                coordinator.navigateToColors(coordinator: coordinator.servicesCoordinator)
             } label: {
-                Text("Feature B")
+                Text("Colors")
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
+
             Spacer()
         }
+        .navigationTitle("Services")
         .padding()
     }
 }

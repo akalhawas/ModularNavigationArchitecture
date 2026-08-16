@@ -6,13 +6,24 @@
 //
 
 import SwiftUI
-
+import Colors
 struct HomeView: View {
+
+    @EnvironmentObject var coordinator: MainCoordinator
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                ColorsModule.makeLatestColorsView(limit: 4)
+                    .environmentObject(coordinator.homeCoordinator)
+            }
+            .padding(.vertical)
+        }
     }
 }
 
 #Preview {
+    let _ = AppComposition.bootstrapFeatures()
     HomeView()
+        .environmentObject(MainCoordinator())
 }

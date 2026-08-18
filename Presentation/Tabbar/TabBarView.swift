@@ -23,7 +23,7 @@ struct TabBarView: View {
             
             NavigationHost(coordinator: mainCoordinator.homeCoordinator) {
                 HomeView()
-                    .environmentObject(mainCoordinator)
+                    .environmentObject(mainCoordinator.homeCoordinator)
             }
             .tabItem {
                 Image(systemName: "house")
@@ -33,7 +33,7 @@ struct TabBarView: View {
             
             NavigationHost(coordinator: mainCoordinator.servicesCoordinator) {
                 ServicesView()
-                    .environmentObject(mainCoordinator)
+                    .environmentObject(mainCoordinator.servicesCoordinator)
             }
             .tabItem {
                 Image(systemName: "square.grid.2x2")

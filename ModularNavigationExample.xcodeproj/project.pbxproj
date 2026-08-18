@@ -35,8 +35,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2304AFF23000D31D00423F1C /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = App;
 			sourceTree = "<group>";
 		};
@@ -50,15 +48,11 @@
 		};
 		234696E130024F5500E903E3 /* Packages */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = Packages;
 			sourceTree = "<group>";
 		};
 		23CCDD3D30323E9100A71BDF /* AppDependencies */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = AppDependencies;
 			sourceTree = "<group>";
 		};
@@ -165,8 +159,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */,
-				0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Colors" */,
-				6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */,
+				0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Packages/Features/Colors" */,
+				6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2304AFD13000D14D00423F1C /* Products */;
@@ -411,11 +405,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Colors" */ = {
+		0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Packages/Features/Colors" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Features/Colors;
 		};
-		6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */ = {
+		6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Features/Users;
 		};
@@ -445,17 +439,17 @@
 		};
 		8DEBAC1DAB1C598EFBBFF11C /* UsersAPI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */;
+			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */;
 			productName = UsersAPI;
 		};
 		A39498E0C0240584D82614C3 /* Users */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Users" */;
+			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */;
 			productName = Users;
 		};
 		D943939286F2A57637B5BC22 /* Colors */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Colors" */;
+			package = 0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Packages/Features/Colors" */;
 			productName = Colors;
 		};
 /* End XCSwiftPackageProductDependency section */

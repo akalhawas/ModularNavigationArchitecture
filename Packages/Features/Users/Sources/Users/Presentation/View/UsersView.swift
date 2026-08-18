@@ -55,7 +55,7 @@ struct UsersView: View {
         } else {
             List(viewModel.users) { user in
                 Button {
-                    coordinator.navigate(to: UsersRoute.userDetail(id: user.id))                    
+                    coordinator.navigate(to: UsersRoute.userDetail(id: user.id))
                 } label: {
                     UserRow(user: user)
                 }

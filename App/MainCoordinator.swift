@@ -8,10 +8,11 @@
 import Combine
 import SwiftUI
 import Navigation
-import Users
 import Colors
 import UsersAPI
-
+@_exported import Users
+@_exported import Colors
+ 
 @MainActor
 final class MainCoordinator: ObservableObject {
 
@@ -23,17 +24,6 @@ final class MainCoordinator: ObservableObject {
 
     init() { }
 
-}
-
-// MARK: Feature Navigation
-extension MainCoordinator {
-    func navigateToUsers(coordinator: NavigationCoordinator) {
-        coordinator.navigate(to: UsersRoute.usersList)
-    }
-
-    func navigateToColors(coordinator: NavigationCoordinator) {
-        coordinator.navigate(to: ColorsRoute.colorsList)
-    }
 }
 
 // MARK: Feature Deeplink

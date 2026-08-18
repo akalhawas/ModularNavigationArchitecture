@@ -7,15 +7,17 @@
 
 import SwiftUI
 import Colors
+
+import Navigation
+
 struct HomeView: View {
 
-    @EnvironmentObject var coordinator: MainCoordinator
+    @EnvironmentObject var coordinator: NavigationCoordinator
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 ColorsModule.makeLatestColorsView(limit: 4)
-                    .environmentObject(coordinator.homeCoordinator)
             }
             .padding(.vertical)
         }

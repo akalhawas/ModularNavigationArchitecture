@@ -10,13 +10,13 @@ import Navigation
 
 struct ServicesView: View {
     
-    @EnvironmentObject var coordinator: MainCoordinator
-    
+    @EnvironmentObject var coordinator: NavigationCoordinator
     @State private var showSheet: Bool = false
+    
     var body: some View {
         VStack {
             Button {
-                coordinator.navigateToUsers(coordinator: coordinator.servicesCoordinator)
+                coordinator.navigate(to: UsersRoute.usersList)
             } label: {
                 Text("Users")
                     .padding()
@@ -27,7 +27,7 @@ struct ServicesView: View {
             }
 
             Button {
-                coordinator.navigateToColors(coordinator: coordinator.servicesCoordinator)
+                coordinator.navigate(to: ColorsRoute.colorsList)
             } label: {
                 Text("Colors")
                     .padding()

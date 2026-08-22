@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		2304B0993000DDD300423F1C /* ModularNavigationExample-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */; };
-		23CCDD3730323DEB00A71BDF /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 23CCDD3630323DEB00A71BDF /* Navigation */; };
-		23CCDD3930323DEB00A71BDF /* NetworkService in Frameworks */ = {isa = PBXBuildFile; productRef = 23CCDD3830323DEB00A71BDF /* NetworkService */; };
+		23FAF0FA303997130077DA6D /* Users in Frameworks */ = {isa = PBXBuildFile; productRef = 23FAF0F9303997130077DA6D /* Users */; };
+		23FAF15A3039A6640077DA6D /* Users in Frameworks */ = {isa = PBXBuildFile; productRef = 23FAF1593039A6640077DA6D /* Users */; };
+		23FAF1B73039AFE90077DA6D /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 23FAF1B63039AFE90077DA6D /* Navigation */; };
+		23FAF1B93039AFE90077DA6D /* NetworkService in Frameworks */ = {isa = PBXBuildFile; productRef = 23FAF1B83039AFE90077DA6D /* NetworkService */; };
 		304C76E128AB83F48EB02E1D /* Colors in Frameworks */ = {isa = PBXBuildFile; productRef = D943939286F2A57637B5BC22 /* Colors */; };
-		5D9971EB70F1EBFA518E3C94 /* UsersAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 8DEBAC1DAB1C598EFBBFF11C /* UsersAPI */; };
-		672CACBD83C61F4B073BE0D1 /* Users in Frameworks */ = {isa = PBXBuildFile; productRef = A39498E0C0240584D82614C3 /* Users */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +56,11 @@
 			path = AppDependencies;
 			sourceTree = "<group>";
 		};
+		23FAF0CE30398B050077DA6D /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,11 +68,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23CCDD3730323DEB00A71BDF /* Navigation in Frameworks */,
-				23CCDD3930323DEB00A71BDF /* NetworkService in Frameworks */,
+				23FAF1B73039AFE90077DA6D /* Navigation in Frameworks */,
+				23FAF1B93039AFE90077DA6D /* NetworkService in Frameworks */,
+				23FAF15A3039A6640077DA6D /* Users in Frameworks */,
 				304C76E128AB83F48EB02E1D /* Colors in Frameworks */,
-				672CACBD83C61F4B073BE0D1 /* Users in Frameworks */,
-				5D9971EB70F1EBFA518E3C94 /* UsersAPI in Frameworks */,
+				23FAF0FA303997130077DA6D /* Users in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +87,7 @@
 				2304AFF23000D31D00423F1C /* App */,
 				2304B0603000D41300423F1C /* Presentation */,
 				234696E130024F5500E903E3 /* Packages */,
+				23FAF0CE30398B050077DA6D /* Resources */,
 				2304B0793000D5B900423F1C /* Frameworks */,
 				2304AFD13000D14D00423F1C /* Products */,
 			);
@@ -120,14 +126,15 @@
 			fileSystemSynchronizedGroups = (
 				2304AFF23000D31D00423F1C /* App */,
 				23CCDD3D30323E9100A71BDF /* AppDependencies */,
+				23FAF0CE30398B050077DA6D /* Resources */,
 			);
 			name = ModularNavigationExample;
 			packageProductDependencies = (
-				23CCDD3630323DEB00A71BDF /* Navigation */,
-				23CCDD3830323DEB00A71BDF /* NetworkService */,
 				D943939286F2A57637B5BC22 /* Colors */,
-				A39498E0C0240584D82614C3 /* Users */,
-				8DEBAC1DAB1C598EFBBFF11C /* UsersAPI */,
+				23FAF0F9303997130077DA6D /* Users */,
+				23FAF1593039A6640077DA6D /* Users */,
+				23FAF1B63039AFE90077DA6D /* Navigation */,
+				23FAF1B83039AFE90077DA6D /* NetworkService */,
 			);
 			productName = ModularNavigationExample;
 			productReference = 2304AFD03000D14D00423F1C /* ModularNavigationExample.app */;
@@ -158,9 +165,9 @@
 			mainGroup = 2304AFC73000D14D00423F1C;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */,
 				0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Packages/Features/Colors" */,
-				6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */,
+				23FAF1583039A6640077DA6D /* XCLocalSwiftPackageReference "Packages/Features/Users" */,
+				23FAF1B53039AFE90077DA6D /* XCLocalSwiftPackageReference "../../../Desktop/Wajha-Project/SharedLibrary/SharedLibraries" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2304AFD13000D14D00423F1C /* Products */;
@@ -409,43 +416,32 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Features/Colors;
 		};
-		6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */ = {
+		23FAF1583039A6640077DA6D /* XCLocalSwiftPackageReference "Packages/Features/Users" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Features/Users;
 		};
+		23FAF1B53039AFE90077DA6D /* XCLocalSwiftPackageReference "../../../Desktop/Wajha-Project/SharedLibrary/SharedLibraries" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../Desktop/Wajha-Project/SharedLibrary/SharedLibraries";
+		};
 /* End XCLocalSwiftPackageReference section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/akalhawas/SharedLibraries.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		23CCDD3630323DEB00A71BDF /* Navigation */ = {
+		23FAF0F9303997130077DA6D /* Users */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */;
+			productName = Users;
+		};
+		23FAF1593039A6640077DA6D /* Users */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Users;
+		};
+		23FAF1B63039AFE90077DA6D /* Navigation */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = Navigation;
 		};
-		23CCDD3830323DEB00A71BDF /* NetworkService */ = {
+		23FAF1B83039AFE90077DA6D /* NetworkService */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 23CCDD3530323DEB00A71BDF /* XCRemoteSwiftPackageReference "SharedLibraries" */;
 			productName = NetworkService;
-		};
-		8DEBAC1DAB1C598EFBBFF11C /* UsersAPI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */;
-			productName = UsersAPI;
-		};
-		A39498E0C0240584D82614C3 /* Users */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6D275F4789D02A42A20F89B9 /* XCLocalSwiftPackageReference "Packages/Features/Users" */;
-			productName = Users;
 		};
 		D943939286F2A57637B5BC22 /* Colors */ = {
 			isa = XCSwiftPackageProductDependency;

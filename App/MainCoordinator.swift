@@ -7,11 +7,6 @@
 
 import Combine
 import SwiftUI
-import Navigation
-import Colors
-import UsersAPI
-@_exported import Users
-@_exported import Colors
  
 @MainActor
 final class MainCoordinator: ObservableObject {
@@ -30,15 +25,12 @@ final class MainCoordinator: ObservableObject {
 extension MainCoordinator {
     func handleDeepLinkNavigation(to destination: any NavigationDestination) {
         switch destination {
-        case is UsersDestination:
-            guard let route = RouteRegistry.shared.resolve(destination) else { return }
-            selectedTab = .home
-            homeCoordinator.navigate(to: route, strategy: .resetStack)
-            return
         default:
             guard let route = RouteRegistry.shared.resolve(destination) else { return }
             selectedTab = .services
-            servicesCoordinator.navigate(to: route, strategy: .resetStack)
+            servicesCoordinator.dismissSheet()
+            servicesCoordinator.dismissFullScreen()
+            servicesCoordinator.navigate(to: route, strategy: .push)
         }
     }
 }

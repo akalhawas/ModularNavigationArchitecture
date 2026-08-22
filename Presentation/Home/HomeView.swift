@@ -7,12 +7,9 @@
 
 import SwiftUI
 import Colors
-
 import Navigation
 
 struct HomeView: View {
-
-    @EnvironmentObject var coordinator: NavigationCoordinator
 
     var body: some View {
         ScrollView {

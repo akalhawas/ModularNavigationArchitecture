@@ -9,24 +9,16 @@ let package = Package(
         .iOS(.v16),
     ],
     products: [
-        .library(name: "UsersAPI", targets: ["UsersAPI"]),
         .library(name: "Users", targets: ["Users"]),
     ], dependencies: [
-        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.0"),
-        .package(path: "../Colors"),
+        .package(path: "/Users/akalhawas/Desktop/Wajha-Project/SharedLibrary/SharedLibraries"),
     ],
     targets: [
         .target(
-            name: "UsersAPI",
-            dependencies: [.product(name: "Navigation", package: "SharedLibraries")]
-        ),
-        .target(
             name: "Users",
             dependencies: [
-                "UsersAPI",
                 .product(name: "Navigation", package: "SharedLibraries"),
                 .product(name: "NetworkService", package: "SharedLibraries"),
-                .product(name: "ColorsAPI", package: "Colors"),
             ]
         ),
         .testTarget(

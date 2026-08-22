@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
-import Navigation
 import Combine
+@_exported import Users
+@_exported import Colors
+@_exported import Navigation
 
 @main
 struct ModularizedByFeatureApp: App {
@@ -22,7 +24,7 @@ struct ModularizedByFeatureApp: App {
         WindowGroup {
             RootView(coordinator: mainCoordinator)
                 .onOpenURL { url in
-                    guard let destination = AppComposition.deepLinkRouter.resolve(url: url)
+                    guard let destination = DeepLinkRouter.shared.resolve(url: url)
                     else { return }
                     mainCoordinator.handleDeepLinkNavigation(to: destination)
                 }

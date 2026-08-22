@@ -11,7 +11,6 @@ import Navigation
 struct ServicesView: View {
     
     @EnvironmentObject var coordinator: NavigationCoordinator
-    @State private var showSheet: Bool = false
     
     var body: some View {
         VStack {

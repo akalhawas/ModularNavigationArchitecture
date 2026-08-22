@@ -7,7 +7,6 @@
 
 import NetworkService
 import Navigation
-import UsersAPI
 
 /// Resolves this feature's dependencies without callers having to build
 /// `UsersDependencies` themselves at every navigation site.
@@ -26,10 +25,8 @@ public enum UsersModule {
         viewModels = { dependencies.viewModels }
         registerPublicEntryPoint()
     }
-}
 
-extension UsersModule {
-    static func registerPublicEntryPoint() {
+    private static func registerPublicEntryPoint() {
         // MARK: Register the public entry points
         RouteRegistry.shared.register(UsersDestination.self) { destination in
             switch destination {
@@ -37,5 +34,6 @@ extension UsersModule {
                 return AnyRoute(UsersRoute.userDetail(id: id))
             }
         }
+        DeepLinkRouter.shared.register(UsersDeepLinkMapper())
     }
 }

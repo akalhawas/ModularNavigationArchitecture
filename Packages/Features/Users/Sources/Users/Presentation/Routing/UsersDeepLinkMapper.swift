@@ -7,14 +7,12 @@
 
 import SwiftUI
 import Navigation
-import UsersAPI
 
-public struct UsersDeepLinkMapper: DeepLinkMapper {
-    
-    // xcrun simctl openurl booted "com.ali.modularizedbyfeature://users/details?id=1"
-    
-    public init() {}
-    public func map(url: URL) -> (any NavigationDestination)? {
+struct UsersDeepLinkMapper: DeepLinkMapper {
+
+    // xcrun simctl openurl booted "com.ali.modularnavigationexample://users/details?id=1"
+
+    func map(url: URL) -> (any NavigationDestination)? {
 
         if url.host == "users",
            url.path == "/details",

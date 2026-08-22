@@ -18,13 +18,29 @@ struct ColorsView: View {
     }
 
     var body: some View {
-        content
-            .navigationTitle("Colors")
-            .task {
-                if viewModel.colors.isEmpty {
-                    viewModel.fetchColors()
+        VStack {
+            content
+                .navigationTitle("Colors")
+                .task {
+                    if viewModel.colors.isEmpty {
+                        viewModel.fetchColors()
+                    }
                 }
-            }
+            
+            Button {
+                guard let url = URL(string: "com.ali.modularnavigationexample://users/details?id=1"),
+                      let destination = DeepLinkRouter.shared.resolve(url: url),
+                      let route = RouteRegistry.shared.resolve(destination) else { return }
+                coordinator.navigate(to: route)
+            } label: {
+                Text("Users")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }            
+        }
     }
 
     @ViewBuilder
@@ -39,7 +55,7 @@ struct ColorsView: View {
         } else {
             List(viewModel.colors) { color in
                 Button {
-                    coordinator.navigate(to: ColorsRoute.colorDetail(id: color.id))
+                    coordinator.presentSheet(ColorsRoute.colorDetail(id: color.id))
                 } label: {
                     ColorRow(color: color)
                 }

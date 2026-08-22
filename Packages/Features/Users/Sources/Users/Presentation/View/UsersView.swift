@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Navigation
-import ColorsAPI
 
 struct UsersView: View {
 
@@ -26,21 +25,6 @@ struct UsersView: View {
                     viewModel.fetchUsers()
                 }
             }
-        
-        Button {
-            let destination = ColorsDestination.details(id: 1)
-            guard let route = RouteRegistry.shared.resolve(destination) else { return }
-            coordinator.navigate(to: route)
-        } label: {
-            Text("Color 1")
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.red)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-        }
-        .padding(.bottom)
-        .buttonStyle(.plain)
     }
 
     @ViewBuilder

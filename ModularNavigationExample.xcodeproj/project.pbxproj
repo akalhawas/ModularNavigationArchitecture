@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2304B0993000DDD300423F1C /* ModularNavigationExample-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */; };
 		23FAF0FA303997130077DA6D /* Users in Frameworks */ = {isa = PBXBuildFile; productRef = 23FAF0F9303997130077DA6D /* Users */; };
 		23FAF15A3039A6640077DA6D /* Users in Frameworks */ = {isa = PBXBuildFile; productRef = 23FAF1593039A6640077DA6D /* Users */; };
 		23FAF1B73039AFE90077DA6D /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 23FAF1B63039AFE90077DA6D /* Navigation */; };
@@ -184,7 +183,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2304B0993000DDD300423F1C /* ModularNavigationExample-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

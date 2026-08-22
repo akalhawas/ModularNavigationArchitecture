@@ -11,6 +11,6 @@ import Navigation
 /// Other features never reference this type directly — they navigate in
 /// through a URL resolved by `DeepLinkRouter`, so this stays internal to
 /// the Colors module.
-enum ColorsDestination: NavigationDestination {
+public enum ColorsDestination: NavigationDestination {
     case details(id: Int)
 }

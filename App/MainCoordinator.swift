@@ -7,7 +7,7 @@
 
 import Combine
 import SwiftUI
- 
+
 @MainActor
 final class MainCoordinator: ObservableObject {
 
@@ -17,6 +17,10 @@ final class MainCoordinator: ObservableObject {
     let homeCoordinator = NavigationCoordinator()
     let servicesCoordinator = NavigationCoordinator()
 
+    private var allCoordinators: [NavigationCoordinator] {
+        [homeCoordinator, servicesCoordinator]
+    }
+
     init() { }
 
 }
@@ -24,12 +28,17 @@ final class MainCoordinator: ObservableObject {
 // MARK: Feature Deeplink
 extension MainCoordinator {
     func handleDeepLinkNavigation(to destination: any NavigationDestination) {
+        
+        /// remove all presentation
+        allCoordinators.forEach { coordinator in
+            coordinator.dismissSheet()
+            coordinator.dismissFullScreen()
+        }
+        
         switch destination {
         default:
             guard let route = RouteRegistry.shared.resolve(destination) else { return }
             selectedTab = .services
-            servicesCoordinator.dismissSheet()
-            servicesCoordinator.dismissFullScreen()
             servicesCoordinator.navigate(to: route, strategy: .push)
         }
     }

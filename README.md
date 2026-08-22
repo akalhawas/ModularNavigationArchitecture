@@ -235,17 +235,26 @@ This is the *same pipeline* as §2 — the only difference is where the `URL` co
 ```swift
 // App/MainCoordinator.swift
 func handleDeepLinkNavigation(to destination: any NavigationDestination) {
-    guard let route = RouteRegistry.shared.resolve(destination) else { return }
-    selectedTab = .services
-    servicesCoordinator.dismissSheet()
-    servicesCoordinator.dismissFullScreen()
-    servicesCoordinator.navigate(to: route, strategy: .push)
+    /// remove all presentation
+    allCoordinators.forEach { coordinator in
+        coordinator.dismissSheet()
+        coordinator.dismissFullScreen()
+    }
+
+    switch destination {
+    default:
+        guard let route = RouteRegistry.shared.resolve(destination) else { return }
+        selectedTab = .services
+        servicesCoordinator.navigate(to: route, strategy: .push)
+    }
 }
 ```
 
 Deciding *where* to land (which tab, which coordinator) has to happen at this top level — a deep link can arrive
 while the user is anywhere in the app. `.resetStack`/`.push` here is a per-app call; this example always pushes onto
-the `services` tab's stack.
+the `services` tab's stack. Before that, it dismisses any sheet/full-screen presentation on *every* coordinator
+(`allCoordinators`, not just `servicesCoordinator`) — a deep link can land while the user has something presented on
+a different tab entirely.
 
 Mappers are tried **in the order they were registered** — which is the order each feature's `register()` runs in
 `AppComposition.bootstrapFeatures()`. The first mapper to return non-`nil` wins. If two mappers could plausibly match

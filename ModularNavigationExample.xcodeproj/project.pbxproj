@@ -167,7 +167,7 @@
 			packageReferences = (
 				0CC7AFC3C14F3E68F16D514F /* XCLocalSwiftPackageReference "Packages/Features/Colors" */,
 				23FAF1583039A6640077DA6D /* XCLocalSwiftPackageReference "Packages/Features/Users" */,
-				23FAF1B53039AFE90077DA6D /* XCLocalSwiftPackageReference "../../../Desktop/Wajha-Project/SharedLibrary/SharedLibraries" */,
+				23FAF1B53039AFE90077DA6D /* XCRemoteSwiftPackageReference "SharedLibraries" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2304AFD13000D14D00423F1C /* Products */;
@@ -420,11 +420,18 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/Features/Users;
 		};
-		23FAF1B53039AFE90077DA6D /* XCLocalSwiftPackageReference "../../../Desktop/Wajha-Project/SharedLibrary/SharedLibraries" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../../Desktop/Wajha-Project/SharedLibrary/SharedLibraries";
-		};
 /* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		23FAF1B53039AFE90077DA6D /* XCRemoteSwiftPackageReference "SharedLibraries" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/akalhawas/SharedLibraries.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		23FAF0F9303997130077DA6D /* Users */ = {
@@ -437,10 +444,12 @@
 		};
 		23FAF1B63039AFE90077DA6D /* Navigation */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 23FAF1B53039AFE90077DA6D /* XCRemoteSwiftPackageReference "SharedLibraries" */;
 			productName = Navigation;
 		};
 		23FAF1B83039AFE90077DA6D /* NetworkService */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 23FAF1B53039AFE90077DA6D /* XCRemoteSwiftPackageReference "SharedLibraries" */;
 			productName = NetworkService;
 		};
 		D943939286F2A57637B5BC22 /* Colors */ = {

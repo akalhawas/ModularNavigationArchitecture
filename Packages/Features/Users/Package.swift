@@ -11,7 +11,7 @@ let package = Package(
     products: [
         .library(name: "Users", targets: ["Users"]),
     ], dependencies: [
-        .package(path: "/Users/akalhawas/Desktop/Wajha-Project/SharedLibrary/SharedLibraries"),
+        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.3"),
     ],
     targets: [
         .target(

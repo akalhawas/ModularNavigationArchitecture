@@ -5,6 +5,8 @@
 //  Created by ali alhawas on 24/07/2026.
 //
 
+import Navigation
+
 final class UsersViewModels {
 
     private let useCases: UsersUseCases
@@ -19,7 +21,11 @@ final class UsersViewModels {
     }
 
     @MainActor
-    func makeUserDetailViewModel(userId: Int) -> UserDetailViewModel {
-        UserDetailViewModel(userId: userId, fetchUserDetailUseCase: useCases.fetchUserDetailUseCase)
+    func makeUserDetailViewModel(userId: Int, onDetailAction: ActionCallback<Void>? = nil) -> UserDetailViewModel {
+        UserDetailViewModel(
+            userId: userId,
+            fetchUserDetailUseCase: useCases.fetchUserDetailUseCase,
+            onDetailAction: onDetailAction
+        )
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Navigation
 
 final class UserDetailViewModel: ObservableObject {
 
@@ -15,11 +16,24 @@ final class UserDetailViewModel: ObservableObject {
 
     private let userId: Int
     private let fetchUserDetailUseCase: FetchUserDetailUseCase
+    private let onDetailAction: ActionCallback<Void>?
     private var cancellables = Set<AnyCancellable>()
 
-    init(userId: Int, fetchUserDetailUseCase: FetchUserDetailUseCase) {
+    init(
+        userId: Int,
+        fetchUserDetailUseCase: FetchUserDetailUseCase,
+        onDetailAction: ActionCallback<Void>? = nil
+    ) {
         self.userId = userId
         self.fetchUserDetailUseCase = fetchUserDetailUseCase
+        self.onDetailAction = onDetailAction
+    }
+
+    /// Call this from wherever the actual action happens on this screen —
+    /// it's independent of navigation; it doesn't pop or dismiss anything,
+    /// it just notifies whoever navigated in here, if they asked to know.
+    func notifyDetailAction() {
+        onDetailAction?.fire()
     }
 
     func fetchUser() {

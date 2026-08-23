@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "UsersAPI", targets: ["UsersAPI"]),
         .library(name: "Users", targets: ["Users"]),
     ], dependencies: [
-        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.3"),
+        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.4"),
     ],
     targets: [
         .target(

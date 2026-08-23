@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "ColorsAPI", targets: ["ColorsAPI"]),
         .library(name: "Colors", targets: ["Colors"]),
     ], dependencies: [
-        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.3"),
+        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.4"),
         .package(path: "../Users"),
     ],
     targets: [

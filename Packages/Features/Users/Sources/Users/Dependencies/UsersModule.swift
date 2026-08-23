@@ -31,8 +31,8 @@ public enum UsersModule {
         // MARK: Register the public entry points
         RouteRegistry.shared.register(UsersDestination.self) { destination in
             switch destination {
-            case .details(let id):
-                return AnyRoute(UsersRoute.userDetail(id: id))
+            case .details(let id, let onDetailAction):
+                return AnyRoute(UsersRoute.userDetail(id: id, onDetailAction: onDetailAction))
             }
         }
         DeepLinkRouter.shared.register(UsersDeepLinkMapper())

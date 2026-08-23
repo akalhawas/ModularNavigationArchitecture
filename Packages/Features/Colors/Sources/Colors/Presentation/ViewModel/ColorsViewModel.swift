@@ -31,4 +31,13 @@ final class ColorsViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+
+    /// Passed as `UsersDestination.details(id:onDetailAction:)`'s callback.
+    /// Called directly by `UserDetailViewModel.notifyDetailAction()` when
+    /// its own action happens — independent of whether/when the user has
+    /// actually navigated back to this screen. Fill in whatever Colors
+    /// needs to do in response.
+    func didReturnFromUsers() {
+        
+    }
 }

@@ -27,9 +27,11 @@ struct ColorsView: View {
                         viewModel.fetchColors()
                     }
                 }
-            
+
             Button {
-                let destination = UsersDestination.details(id: 1)
+                let destination = UsersDestination.details(id: 1) {
+                    viewModel.didReturnFromUsers()
+                }
                 guard let route = RouteRegistry.shared.resolve(destination) else { return }
                 coordinator.navigate(to: route)
             } label: {

@@ -16,13 +16,26 @@ struct UserDetailView: View {
     }
 
     var body: some View {
-        content
-            .navigationTitle("Details")
-            .task {
-                if viewModel.user == nil {
-                    viewModel.fetchUser()
+        VStack {
+            content
+                .navigationTitle("Details")
+                .task {
+                    if viewModel.user == nil {
+                        viewModel.fetchUser()
+                    }
                 }
+            
+            Button {
+                viewModel.notifyDetailAction()
+            } label: {
+                Text("notifyDetailAction")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
             }
+        }
     }
 
     @ViewBuilder

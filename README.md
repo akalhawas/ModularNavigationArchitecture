@@ -47,8 +47,8 @@ the `DeepLinkMapper` half if it should also be reachable by a real OS deep link 
 navigated to in-app from another feature doesn't need one.
 
 Depending on `<FeatureName>API` reintroduces a compile-time dependency between features, so it only works
-one-directionally: if `Colors` depends on `UsersAPI`, `Users` (or `UsersAPI`) cannot depend on `Colors` or
-`ColorsAPI` — SPM will not resolve a circular package graph. If two features need to reach *each other* in-app,
+one-directionally: if `FeatureX` depends on `FeatureYAPI`, `FeatureY` (or `FeatureYAPI`) cannot depend on `FeatureX`
+or `FeatureXAPI` — SPM will not resolve a circular package graph. If two features need to reach *each other* in-app,
 pick one direction for the `API`-target dependency and have the other direction go through the URL/`DeepLinkRouter`
 path instead.
 
@@ -151,116 +151,117 @@ fresh `PresentedNavigationHost` — you don't construct that type directly eithe
 **Never import one feature's *main* target from another to navigate into it.** That would pull in its views, use
 cases, and networking just to build a route. Instead, a feature that wants to be reachable from other features
 exposes a second, minimal SPM product — `<FeatureName>API` — containing nothing but its `NavigationDestination`.
-Callers depend on that product only. In this repo, `Colors` depends on `Users`'s `UsersAPI` product (and nothing
-else from `Users`); `Users` has no dependency on `Colors` at all, which is what keeps the package graph acyclic.
+Callers depend on that product only. In this example, `FeatureX` depends on `FeatureY`'s `FeatureYAPI` product (and
+nothing else from `FeatureY`); `FeatureY` has no dependency on `FeatureX` at all, which is what keeps the package
+graph acyclic.
 
 ### Step 1 — Declare the destination(s) your feature exposes, in a separate `<FeatureName>API` target
 
 ```swift
-// Packages/Features/Users/Sources/UsersAPI/UsersDestination.swift
+// Packages/Features/FeatureY/Sources/FeatureYAPI/FeatureYDestination.swift
 import Navigation
 
-/// Defines public entry points into the Users feature.
+/// Defines public entry points into the FeatureY feature.
 ///
 /// Used for cross-feature navigation and deep linking. This is the only
-/// thing other features/the app need to depend on to navigate into Users —
-/// it does not pull in Users' SwiftUI views, networking, or use cases.
-public enum UsersDestination: NavigationDestination {
+/// thing other features/the app need to depend on to navigate into FeatureY —
+/// it does not pull in FeatureY's SwiftUI views, networking, or use cases.
+public enum FeatureYDestination: NavigationDestination {
     case details(id: Int)
 }
 ```
 
 ```swift
-// Packages/Features/Users/Package.swift
+// Packages/Features/FeatureY/Package.swift
 products: [
-    .library(name: "UsersAPI", targets: ["UsersAPI"]),
-    .library(name: "Users", targets: ["Users"]),
+    .library(name: "FeatureYAPI", targets: ["FeatureYAPI"]),
+    .library(name: "FeatureY", targets: ["FeatureY"]),
 ],
 targets: [
-    .target(name: "UsersAPI", dependencies: [.product(name: "Navigation", package: "SharedLibraries")]),
-    .target(name: "Users", dependencies: ["UsersAPI", /* ... */]),
+    .target(name: "FeatureYAPI", dependencies: [.product(name: "Navigation", package: "SharedLibraries")]),
+    .target(name: "FeatureY", dependencies: ["FeatureYAPI", /* ... */]),
     // ...
 ]
 ```
 
-Keep `UsersDestination` to *only* the cases meant to be reachable from outside — it does not need to mirror your
-feature's `Route` type. `UsersRoute` also has a `.usersList` case with no `UsersDestination` counterpart, on
+Keep `FeatureYDestination` to *only* the cases meant to be reachable from outside — it does not need to mirror your
+feature's `Route` type. `FeatureYRoute` also has a `.list` case with no `FeatureYDestination` counterpart, on
 purpose: nobody should be able to jump straight to "the list" from outside the feature. Adding a case here is a
-deliberate, visible step — that's what keeps the external surface intentional instead of accidental. The `Users`
-main target re-exposes it as `"UsersAPI"` in its own dependency list purely so `Users`'s own files (the mapper, the
-module registration below) can `import UsersAPI` alongside `Navigation`.
+deliberate, visible step — that's what keeps the external surface intentional instead of accidental. The `FeatureY`
+main target re-exposes it as `"FeatureYAPI"` in its own dependency list purely so `FeatureY`'s own files (the
+mapper, the module registration below) can `import FeatureYAPI` alongside `Navigation`.
 
 ### Step 2 — Write a mapper, and register both it and the destination from your own module
 
 ```swift
-// Packages/Features/Users/Sources/Users/Presentation/Routing/UsersDeepLinkMapper.swift
+// Packages/Features/FeatureY/Sources/FeatureY/Presentation/Routing/FeatureYDeepLinkMapper.swift
 import Navigation
-import UsersAPI
+import FeatureYAPI
 
-struct UsersDeepLinkMapper: DeepLinkMapper {
-    // xcrun simctl openurl booted "com.ali.modularnavigationexample://users/details?id=1"
+struct FeatureYDeepLinkMapper: DeepLinkMapper {
+    // xcrun simctl openurl booted "com.ali.modularnavigationexample://featurey/details?id=1"
     func map(url: URL) -> (any NavigationDestination)? {
-        guard url.host == "users", url.path == "/details",
+        guard url.host == "featurey", url.path == "/details",
               let id = url.queryItem("id") else { return nil }
-        return UsersDestination.details(id: Int(id) ?? 0)
+        return FeatureYDestination.details(id: Int(id) ?? 0)
     }
 }
 ```
 
 ```swift
-// Packages/Features/Users/Sources/Users/Dependencies/UsersModule.swift
-public enum UsersModule {
+// Packages/Features/FeatureY/Sources/FeatureY/Dependencies/FeatureYModule.swift
+public enum FeatureYModule {
     public static func register(network: NetworkService) {
         // ... build dependencies ...
         registerPublicEntryPoint()
     }
 
     private static func registerPublicEntryPoint() {
-        RouteRegistry.shared.register(UsersDestination.self) { destination in
+        RouteRegistry.shared.register(FeatureYDestination.self) { destination in
             switch destination {
             case .details(let id):
-                return AnyRoute(UsersRoute.userDetail(id: id))
+                return AnyRoute(FeatureYRoute.detail(id: id))
             }
         }
-        DeepLinkRouter.shared.register(UsersDeepLinkMapper())
+        DeepLinkRouter.shared.register(FeatureYDeepLinkMapper())
     }
 }
 ```
 
-`UsersModule.register(network:)` is called once at app launch from `AppComposition.bootstrapFeatures()` — see
+`FeatureYModule.register(network:)` is called once at app launch from `AppComposition.bootstrapFeatures()` — see
 `App/AppComposition.swift`. There's no central place that assembles a list of every feature's mapper; each feature
 registers its own into the shared `DeepLinkRouter.shared`/`RouteRegistry.shared` singletons.
 
 ### Step 3 — Navigate in from another feature, using `<FeatureName>API` + `Navigation`
 
 ```swift
-// Packages/Features/Colors/Sources/Colors/Presentation/View/ColorsView.swift
-import UsersAPI
+// Packages/Features/FeatureX/Sources/FeatureX/Presentation/View/FeatureXView.swift
+import FeatureYAPI
 
 Button {
-    let destination = UsersDestination.details(id: 1)
+    let destination = FeatureYDestination.details(id: 1)
     guard let route = RouteRegistry.shared.resolve(destination) else { return }
     coordinator.navigate(to: route)
 } label: { /* ... */ }
 ```
 
-`ColorsView` imports `UsersAPI` — nothing else from `Users` — and constructs `UsersDestination` directly, so a typo
-in the case name or its arguments is a compile error, not a silent no-op at runtime. If `Users`'s *internal* route
-shape changes (its `UsersRoute` cases, its view models), nothing here needs to change as long as `UsersModule`'s
-`RouteRegistry.shared.register(UsersDestination.self) { ... }` mapping still produces a valid route — `UsersAPI` is
-the only contract `ColorsView` depends on.
+`FeatureXView` imports `FeatureYAPI` — nothing else from `FeatureY` — and constructs `FeatureYDestination` directly,
+so a typo in the case name or its arguments is a compile error, not a silent no-op at runtime. If `FeatureY`'s
+*internal* route shape changes (its `FeatureYRoute` cases, its view models), nothing here needs to change as long as
+`FeatureYModule`'s `RouteRegistry.shared.register(FeatureYDestination.self) { ... }` mapping still produces a valid
+route — `FeatureYAPI` is the only contract `FeatureXView` depends on.
 
-This requires `Colors`'s `Package.swift` to add a local dependency on `Users` and depend on its `UsersAPI` product
-(not `Users` itself):
+This requires `FeatureX`'s `Package.swift` to add a local dependency on `FeatureY` and depend on its `FeatureYAPI`
+product (not `FeatureY` itself):
 
 ```swift
-// Packages/Features/Colors/Package.swift
+// Packages/Features/FeatureX/Package.swift
 dependencies: [
     .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.3"),
-    .package(path: "../Users"),
+    .package(path: "../FeatureY"),
 ],
 targets: [
-    .target(name: "Colors", dependencies: ["ColorsAPI", /* ... */, .product(name: "UsersAPI", package: "Users")]),
+    .target(name: "FeatureX", dependencies: ["FeatureXAPI", /* ... */, .product(name: "FeatureYAPI", package: "FeatureY")]),
     // ...
 ]
 ```
@@ -368,8 +369,8 @@ to it too. A feature that's only ever navigated to internally can skip straight 
   behind `#if os(iOS)` so the package still compiles for macOS — this exists purely so `swift test` can run on the
   host Mac without booting an iOS simulator. It has no effect on iOS behavior.
 - **`FeatureModule` exists in `Navigation` but isn't currently adopted.** Features register through a plain
-  `register(network:)` static method on their own module enum (`UsersModule`, `ColorsModule`), called directly from
-  `AppComposition.bootstrapFeatures()` — not through a `[FeatureModule.Type]` array. If you want a uniform
+  `register(network:)` static method on their own module enum (`FeatureYModule`, `FeatureXModule`), called directly
+  from `AppComposition.bootstrapFeatures()` — not through a `[FeatureModule.Type]` array. If you want a uniform
   registration hook across features, conform to it; nothing currently depends on that happening.
 
 ## Testing
@@ -385,10 +386,10 @@ Runs on macOS directly — no simulator needed, finishes in well under a second.
 `Tests/NavigationTests`: `NavigationCoordinatorTests`, `RouteRegistryTests`, `AnyRouteTests`, `DeepLinkRouterTests`,
 and `URLQueryItemTests`.
 
-For this repo's own feature-level coverage — e.g. `UsersDeepLinkMapperTests`, which pins the exact URL shape a real
-OS deep link into `Users` must have — run the package's own test target, since the app scheme itself isn't
+For this repo's own feature-level coverage — e.g. `FeatureYDeepLinkMapperTests`, which pins the exact URL shape a
+real OS deep link into `FeatureY` must have — run the package's own test target, since the app scheme itself isn't
 currently wired for the test action:
 
 ```
-xcodebuild test -scheme Users -destination 'platform=iOS Simulator,name=<simulator name>'
+xcodebuild test -scheme FeatureY -destination 'platform=iOS Simulator,name=<simulator name>'
 ```

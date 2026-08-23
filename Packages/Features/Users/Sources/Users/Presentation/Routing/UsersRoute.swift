@@ -12,6 +12,12 @@ public enum UsersRoute: Route {
     case usersList
     case userDetail(id: Int, onDetailAction: ActionCallback<Void>? = nil)
 
+    /// Convenience for callers that just want to pass a closure directly,
+    /// e.g. `UsersRoute.userDetail(id: 1) { ... }`.
+    public static func userDetail(id: Int, onDetailAction: @escaping () -> Void) -> UsersRoute {
+        .userDetail(id: id, onDetailAction: ActionCallback(onDetailAction))
+    }
+
     public func makeView(coordinator: NavigationCoordinator) -> some View {
         switch self {
         case .usersList:

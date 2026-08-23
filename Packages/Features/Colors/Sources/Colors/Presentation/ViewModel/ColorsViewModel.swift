@@ -38,6 +38,6 @@ final class ColorsViewModel: ObservableObject {
     /// actually navigated back to this screen. Fill in whatever Colors
     /// needs to do in response.
     func didReturnFromUsers() {
-        
+        print("DEBUG: didReturnFromUsers")
     }
 }

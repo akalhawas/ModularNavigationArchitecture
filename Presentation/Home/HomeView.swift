@@ -11,13 +11,11 @@ import Navigation
 
 struct HomeView: View {
 
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                ColorsModule.makeLatestColorsView(limit: 4)
-            }
-            .padding(.vertical)
+    var body: some View {        
+        VStack {
+            
         }
+        .navigationTitle("Home")
     }
 }
 

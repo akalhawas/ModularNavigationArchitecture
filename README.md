@@ -2,13 +2,14 @@
 
 A small, dependency-free SwiftUI navigation layer built on `NavigationStack(path:)`. It gives every feature the same
 toolkit for push/pop/present, and gives the app a way to let features navigate into *each other* without any feature
-depending on another feature's implementation.
+depending on another feature's *implementation* — views, use cases, networking.
 
 Three things this package is designed to make easy, and which this document covers in order:
 
 1. **Internal navigation** — moving around inside a single feature.
-2. **Cross-feature navigation** — feature A sending the user into feature B without importing it.
-3. **Deep linking** — a URL landing the user on a specific screen, reusing the exact same mechanism as #2.
+2. **Cross-feature navigation** — feature A sending the user into feature B by depending only on B's small `API`
+   target, never B's main target.
+3. **Deep linking** — a URL landing the user on a specific screen, sharing the resolution half of #2's pipeline.
 
 ## Contents
 
@@ -28,20 +29,28 @@ Three things this package is designed to make easy, and which this document cove
 | `AnyRoute` | `Navigation` | Type-erased `Route`, so a stack can hold routes from different `Route` types. |
 | `NavigationCoordinator` | `Navigation` | Owns one navigation stack's state: push/pop/present. One per independent flow. |
 | `NavigationHost` / `PresentedNavigationHost` | `Navigation` | SwiftUI wrappers that turn a `NavigationCoordinator` into an actual `NavigationStack`. |
-| `NavigationDestination` | `Navigation` (protocol) | A small, feature-owned allowlist of entry points reachable from outside that feature. Declared **inside** the feature's own target and kept `internal` — not a separate shared package. |
+| `NavigationDestination` | `Navigation` (protocol) | A small, feature-owned allowlist of entry points reachable from outside that feature. Declared `public` inside a lightweight `<FeatureName>API` target — a separate SPM product from the feature's main target — so other features can depend on just the destination type, not the feature's views, use cases, or networking. |
 | `RouteRegistry` | `Navigation` | Resolves a `NavigationDestination` into a real `AnyRoute`, without the caller knowing the feature's route type. |
 | `DeepLinkMapper` / `DeepLinkRouter` | `Navigation` | Turns a `URL` into a `NavigationDestination`. `DeepLinkRouter.shared` is a singleton; each feature registers its own mapper into it at startup, the same way it registers with `RouteRegistry.shared`. |
 
 The flows in one line each:
 
 - **Internal:** `View` → `coordinator.navigate(to: SomeRoute.case)` → pushed onto `NavigationCoordinator.routes` → rendered by `NavigationHost`'s `NavigationStack`.
-- **Cross-feature / deep link:** `URL` → `DeepLinkRouter.shared.resolve(url:)` (tries each registered `DeepLinkMapper` in order) → `NavigationDestination` → `RouteRegistry.shared.resolve(_:)` → `AnyRoute` → `coordinator.navigate(to:)`.
+- **Cross-feature (in-app):** caller imports the callee's `<FeatureName>API` product → constructs `<FeatureName>Destination` directly → `RouteRegistry.shared.resolve(_:)` → `AnyRoute` → `coordinator.navigate(to:)`.
+- **Deep link (from the OS):** `URL` → `DeepLinkRouter.shared.resolve(url:)` (tries each registered `DeepLinkMapper` in order) → `NavigationDestination` → `RouteRegistry.shared.resolve(_:)` → `AnyRoute` → `coordinator.navigate(to:)`.
 
-Because each feature's `NavigationDestination` type stays `internal`, nothing outside that feature can construct one
-directly — a `URL` is the *only* thing that can cross a feature boundary. That means cross-feature navigation and a
-real deep link (a link opened from Safari, Messages, a push notification) aren't two related mechanisms, they're the
-*same* mechanism: a button in one feature that wants to jump into another feature builds a `URL` locally (nothing
-goes over the network) and resolves it through the exact same pipeline the OS uses for a real deep link.
+Both flows share the same back half (`RouteRegistry` → `AnyRoute` → `coordinator.navigate`) and only differ in how
+the `NavigationDestination` value comes into existence: constructed directly and type-checked at compile time for an
+in-app caller that depends on `<FeatureName>API`, or parsed out of a `URL` string by a `DeepLinkMapper` for anything
+that can only hand you a URL (Safari, Messages, a push notification, `xcrun simctl openurl`). A feature only needs
+the `DeepLinkMapper` half if it should also be reachable by a real OS deep link — a destination that's only ever
+navigated to in-app from another feature doesn't need one.
+
+Depending on `<FeatureName>API` reintroduces a compile-time dependency between features, so it only works
+one-directionally: if `Colors` depends on `UsersAPI`, `Users` (or `UsersAPI`) cannot depend on `Colors` or
+`ColorsAPI` — SPM will not resolve a circular package graph. If two features need to reach *each other* in-app,
+pick one direction for the `API`-target dependency and have the other direction go through the URL/`DeepLinkRouter`
+path instead.
 
 ## 1. Internal navigation (within a single feature)
 
@@ -139,33 +148,54 @@ fresh `PresentedNavigationHost` — you don't construct that type directly eithe
 
 ## 2. Cross-feature navigation
 
-**Never import one feature package from another to navigate into it.** That creates a compile-time dependency in
-both directions and defeats the point of splitting features into packages. In this repo, `Colors` and `Users` share
-no dependency at all in either direction — `ColorsView` reaches into `Users` purely through a `URL`.
+**Never import one feature's *main* target from another to navigate into it.** That would pull in its views, use
+cases, and networking just to build a route. Instead, a feature that wants to be reachable from other features
+exposes a second, minimal SPM product — `<FeatureName>API` — containing nothing but its `NavigationDestination`.
+Callers depend on that product only. In this repo, `Colors` depends on `Users`'s `UsersAPI` product (and nothing
+else from `Users`); `Users` has no dependency on `Colors` at all, which is what keeps the package graph acyclic.
 
-### Step 1 — Declare the destination(s) your feature exposes, inside your own target
+### Step 1 — Declare the destination(s) your feature exposes, in a separate `<FeatureName>API` target
 
 ```swift
-// Packages/Features/Users/Sources/Users/Presentation/Routing/UsersDestination.swift
+// Packages/Features/Users/Sources/UsersAPI/UsersDestination.swift
 import Navigation
 
-/// Entry points into the Users feature reachable via UsersDeepLinkMapper and
-/// registered with RouteRegistry. Kept internal and deliberately minimal.
-enum UsersDestination: NavigationDestination {
+/// Defines public entry points into the Users feature.
+///
+/// Used for cross-feature navigation and deep linking. This is the only
+/// thing other features/the app need to depend on to navigate into Users —
+/// it does not pull in Users' SwiftUI views, networking, or use cases.
+public enum UsersDestination: NavigationDestination {
     case details(id: Int)
 }
 ```
 
-Keep this to *only* the cases meant to be reachable from outside — it does not need to mirror your feature's `Route`
-type. `UsersRoute` also has a `.usersList` case with no `UsersDestination` counterpart, on purpose: nobody should be
-able to jump straight to "the list" from outside the feature. Adding a case here is a deliberate, visible step —
-that's what keeps the external surface intentional instead of accidental.
+```swift
+// Packages/Features/Users/Package.swift
+products: [
+    .library(name: "UsersAPI", targets: ["UsersAPI"]),
+    .library(name: "Users", targets: ["Users"]),
+],
+targets: [
+    .target(name: "UsersAPI", dependencies: [.product(name: "Navigation", package: "SharedLibraries")]),
+    .target(name: "Users", dependencies: ["UsersAPI", /* ... */]),
+    // ...
+]
+```
+
+Keep `UsersDestination` to *only* the cases meant to be reachable from outside — it does not need to mirror your
+feature's `Route` type. `UsersRoute` also has a `.usersList` case with no `UsersDestination` counterpart, on
+purpose: nobody should be able to jump straight to "the list" from outside the feature. Adding a case here is a
+deliberate, visible step — that's what keeps the external surface intentional instead of accidental. The `Users`
+main target re-exposes it as `"UsersAPI"` in its own dependency list purely so `Users`'s own files (the mapper, the
+module registration below) can `import UsersAPI` alongside `Navigation`.
 
 ### Step 2 — Write a mapper, and register both it and the destination from your own module
 
 ```swift
 // Packages/Features/Users/Sources/Users/Presentation/Routing/UsersDeepLinkMapper.swift
 import Navigation
+import UsersAPI
 
 struct UsersDeepLinkMapper: DeepLinkMapper {
     // xcrun simctl openurl booted "com.ali.modularnavigationexample://users/details?id=1"
@@ -201,28 +231,50 @@ public enum UsersModule {
 `App/AppComposition.swift`. There's no central place that assembles a list of every feature's mapper; each feature
 registers its own into the shared `DeepLinkRouter.shared`/`RouteRegistry.shared` singletons.
 
-### Step 3 — Navigate in from anywhere, using only a URL + `Navigation`
+### Step 3 — Navigate in from another feature, using `<FeatureName>API` + `Navigation`
 
 ```swift
 // Packages/Features/Colors/Sources/Colors/Presentation/View/ColorsView.swift
+import UsersAPI
+
 Button {
-    guard let url = URL(string: "com.ali.modularnavigationexample://users/details?id=1"),
-          let destination = DeepLinkRouter.shared.resolve(url: url),
-          let route = RouteRegistry.shared.resolve(destination) else { return }
+    let destination = UsersDestination.details(id: 1)
+    guard let route = RouteRegistry.shared.resolve(destination) else { return }
     coordinator.navigate(to: route)
 } label: { /* ... */ }
 ```
 
-`ColorsView` never imports `Users` — it only knows `Navigation` and a URL string. If `Users` ever changes its
-internal route shape, `UsersDestination` and `UsersDeepLinkMapper` are the only things that need to change; every
-caller keeps working unmodified. (This exact URL string is also the one thing standing between "typo" and "silent
-no-op" — see [`UsersDeepLinkMapperTests`](Packages/Features/Users/Tests/UsersTests/Presentation/Routing/UsersDeepLinkMapperTests.swift),
-which pins it against regressions.)
+`ColorsView` imports `UsersAPI` — nothing else from `Users` — and constructs `UsersDestination` directly, so a typo
+in the case name or its arguments is a compile error, not a silent no-op at runtime. If `Users`'s *internal* route
+shape changes (its `UsersRoute` cases, its view models), nothing here needs to change as long as `UsersModule`'s
+`RouteRegistry.shared.register(UsersDestination.self) { ... }` mapping still produces a valid route — `UsersAPI` is
+the only contract `ColorsView` depends on.
+
+This requires `Colors`'s `Package.swift` to add a local dependency on `Users` and depend on its `UsersAPI` product
+(not `Users` itself):
+
+```swift
+// Packages/Features/Colors/Package.swift
+dependencies: [
+    .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.1.3"),
+    .package(path: "../Users"),
+],
+targets: [
+    .target(name: "Colors", dependencies: ["ColorsAPI", /* ... */, .product(name: "UsersAPI", package: "Users")]),
+    // ...
+]
+```
+
+If a caller can only hand you a `URL` (see §3 below) rather than construct the destination directly in Swift, the
+same `RouteRegistry.shared.resolve(_:)` step still applies — only the first step (getting to a `NavigationDestination`)
+differs, going through `DeepLinkRouter.shared.resolve(url:)` and a `DeepLinkMapper` instead of a direct initializer.
 
 ## 3. Deep linking (from the OS)
 
-This is the *same pipeline* as §2 — the only difference is where the `URL` comes from: the OS hands it to you via
-`.onOpenURL` instead of a button constructing it locally.
+This reuses the *second half* of §2's pipeline (`RouteRegistry.shared.resolve(_:) → AnyRoute → coordinator.navigate`)
+but starts from a real `URL` instead of a direct `<FeatureName>API` construction — the OS hands the URL to you via
+`.onOpenURL`, and a registered `DeepLinkMapper` turns it into the same `NavigationDestination` an in-app caller
+would have built directly.
 
 ```swift
 // App/ModularNavigationExampleApp.swift
@@ -266,19 +318,24 @@ the same URL, register the more specific one first.
       `SharedLibraries`).
 - [ ] Define `<FeatureName>Route: Route` with your screens.
 - [ ] Build your views, reading `NavigationCoordinator` via `@EnvironmentObject`.
-- [ ] *(Only if other features or deep links must reach in)* Add a small, `internal`
-      `<FeatureName>Destination: NavigationDestination` inside your own target — only the cases meant to be
-      externally reachable.
-- [ ] *(Only if the above)* Write a `<FeatureName>DeepLinkMapper: DeepLinkMapper`, and register both it
-      (`DeepLinkRouter.shared.register(...)`) and the destination (`RouteRegistry.shared.register(...)`) from your
-      feature's own `register()`.
+- [ ] *(Only if other features or deep links must reach in)* Add a `<FeatureName>API` product/target to your
+      package's `Package.swift`, containing only a `public <FeatureName>Destination: NavigationDestination` with the
+      cases meant to be externally reachable. Make your main target depend on it.
+- [ ] *(Only if the above)* Write a `<FeatureName>DeepLinkMapper: DeepLinkMapper` in your main target, and register
+      both it (`DeepLinkRouter.shared.register(...)`) and the destination (`RouteRegistry.shared.register(...)`)
+      from your feature's own `register()`. This step is only needed if the feature must also be reachable by a
+      *real* OS deep link — a destination only ever reached in-app from another feature doesn't need a mapper.
 - [ ] *(Only if the above)* Make sure your feature's `register(...)` is actually called from
       `AppComposition.bootstrapFeatures()`.
+- [ ] *(For a caller wanting to navigate in)* Add a dependency on the target feature's package and its
+      `<FeatureName>API` product (never its main target), import it, and construct the destination directly —
+      pick one direction only, since a two-way `API` dependency between features creates a circular package graph.
 - [ ] Host the feature's root under a `NavigationHost` somewhere (a tab, a nav-linked entry point), with its own
       `NavigationCoordinator`.
 
-A feature only needs the destination/mapper steps if something *outside* the feature (another feature, a real deep
-link) needs to reach into it. A feature that's only ever navigated to internally can skip straight to hosting it.
+A feature only needs the `<FeatureName>API` target if something *outside* the feature (another feature, a real deep
+link) needs to reach into it; it only needs a `DeepLinkMapper` on top of that if a real URL must be able to resolve
+to it too. A feature that's only ever navigated to internally can skip straight to hosting it.
 
 ## Gotchas & design notes
 
@@ -328,9 +385,9 @@ Runs on macOS directly — no simulator needed, finishes in well under a second.
 `Tests/NavigationTests`: `NavigationCoordinatorTests`, `RouteRegistryTests`, `AnyRouteTests`, `DeepLinkRouterTests`,
 and `URLQueryItemTests`.
 
-For this repo's own feature-level coverage — e.g. `UsersDeepLinkMapperTests`, which pins the exact deep-link URL
-`ColorsView` depends on — run the package's own test target, since the app scheme itself isn't currently wired for
-the test action:
+For this repo's own feature-level coverage — e.g. `UsersDeepLinkMapperTests`, which pins the exact URL shape a real
+OS deep link into `Users` must have — run the package's own test target, since the app scheme itself isn't
+currently wired for the test action:
 
 ```
 xcodebuild test -scheme Users -destination 'platform=iOS Simulator,name=<simulator name>'

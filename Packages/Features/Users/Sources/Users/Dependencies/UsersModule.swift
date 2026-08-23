@@ -7,6 +7,7 @@
 
 import NetworkService
 import Navigation
+import UsersAPI
 
 /// Resolves this feature's dependencies without callers having to build
 /// `UsersDependencies` themselves at every navigation site.

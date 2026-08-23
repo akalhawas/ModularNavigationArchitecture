@@ -5,9 +5,9 @@
 //  Created by ali alhawas on 24/07/2026.
 //
 
-import SwiftUI
 import NetworkService
 import Navigation
+import ColorsAPI
 
 /// Resolves this feature's dependencies without callers having to build
 /// `ColorsDependencies` themselves at every navigation site.
@@ -27,11 +27,6 @@ public enum ColorsModule {
         registerPublicEntryPoint()
     }
 
-    /// Reusable "latest colors".
-    public static func makeLatestColorsView(limit: Int = 10) -> some View {
-        LatestColorsView(viewModel: viewModels().makeLatestColorsViewModel(limit: limit))
-    }
-    
     static func registerPublicEntryPoint() {
         // MARK: Register the public entry points
         RouteRegistry.shared.register(ColorsDestination.self) { destination in

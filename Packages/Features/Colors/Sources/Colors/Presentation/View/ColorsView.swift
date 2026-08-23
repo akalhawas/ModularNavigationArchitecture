@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Navigation
+import UsersAPI
 
 struct ColorsView: View {
 
@@ -28,9 +29,8 @@ struct ColorsView: View {
                 }
             
             Button {
-                guard let url = URL(string: "com.ali.modularnavigationexample://users/details?id=1"),
-                      let destination = DeepLinkRouter.shared.resolve(url: url),
-                      let route = RouteRegistry.shared.resolve(destination) else { return }
+                let destination = UsersDestination.details(id: 1)
+                guard let route = RouteRegistry.shared.resolve(destination) else { return }
                 coordinator.navigate(to: route)
             } label: {
                 Text("Users")
@@ -56,6 +56,7 @@ struct ColorsView: View {
             List(viewModel.colors) { color in
                 Button {
                     coordinator.presentSheet(ColorsRoute.colorDetail(id: color.id))
+//                    coordinator.navigate(to: ColorsRoute.colorDetail(id: color.id))
                 } label: {
                     ColorRow(color: color)
                 }

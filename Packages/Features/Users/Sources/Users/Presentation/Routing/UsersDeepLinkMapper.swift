@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Navigation
+import UsersAPI
 
 struct UsersDeepLinkMapper: DeepLinkMapper {
 

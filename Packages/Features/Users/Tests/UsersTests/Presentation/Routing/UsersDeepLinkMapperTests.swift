@@ -4,6 +4,7 @@
 //
 
 import XCTest
+import UsersAPI
 @testable import Users
 
 /// Pins the exact deep link URL shape other features rely on to reach Users

@@ -6,23 +6,34 @@
 //
 
 import SwiftUI
-
+import Navigation
 struct ColorDetailView: View {
-
+    @EnvironmentObject var coordinator: NavigationCoordinator
     @StateObject private var viewModel: ColorDetailViewModel
 
+    
     init(viewModel: ColorDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
-        content
-            .navigationTitle("Details")
-            .task {
-                if viewModel.color == nil {
-                    viewModel.fetchColor()
+        VStack {
+            content
+                .navigationTitle("Details")
+                .task {
+                    if viewModel.color == nil {
+                        viewModel.fetchColor()
+                    }
                 }
+            
+            Button {
+                coordinator.dismissSheet()
+
+            } label: {
+                Text("Back")
             }
+            .buttonStyle(.plain)
+        }
     }
 
     @ViewBuilder

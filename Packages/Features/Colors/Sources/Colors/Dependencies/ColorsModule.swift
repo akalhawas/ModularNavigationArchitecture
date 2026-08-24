@@ -1,19 +1,10 @@
-//
-//  ColorsModule.swift
-//  Colors
-//
-//  Created by ali alhawas on 24/07/2026.
-//
-
-import SwiftUI
+// Packages/Features/Colors/Sources/Colors/Dependencies/ColorsModule.swift
 import NetworkService
-import Navigation
-import ColorsAPI
 
 /// Resolves this feature's dependencies without callers having to build
 /// `ColorsDependencies` themselves at every navigation site.
 ///
-/// Must be configured once at app launch (see `AppBootstrap.register()`)
+/// Must be configured once at app launch (see `AppComposition.bootstrapFeatures`)
 /// before any `ColorsRoute` is navigated to.
 @MainActor
 public enum ColorsModule {
@@ -25,19 +16,5 @@ public enum ColorsModule {
     public static func register(network: NetworkService, crossFeatureActions: ColorsCrossFeatureActions) {
         let dependencies = ColorsDependencies(network: network, crossFeatureActions: crossFeatureActions)
         viewModels = { dependencies.viewModels }
-        registerPublicEntryPoint()
-    }
-
-    static func registerPublicEntryPoint() {
-        // MARK: Register the public entry points
-        RouteRegistry.shared.register(ColorsDestination.self) { destination in
-            switch destination {
-            case .details(let id):
-                return AnyRoute(ColorsRoute.colorDetail(id: id))
-            }
-        }
-        
-        // MARK: Register the DeepLinkMapper
-        DeepLinkRouter.shared.register(ColorsDeepLinkMapper())
     }
 }

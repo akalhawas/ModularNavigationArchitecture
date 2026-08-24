@@ -1,18 +1,10 @@
-//
-//  UsersModule.swift
-//  Users
-//
-//  Created by ali alhawas on 24/07/2026.
-//
-
+// Packages/Features/Users/Sources/Users/Dependencies/UsersModule.swift
 import NetworkService
-import Navigation
-import UsersAPI
 
 /// Resolves this feature's dependencies without callers having to build
 /// `UsersDependencies` themselves at every navigation site.
 ///
-/// Must be configured once at app launch (see `AppBootstrap.configure()`)
+/// Must be configured once at app launch (see `AppComposition.bootstrapFeatures`)
 /// before any `UsersRoute` is navigated to.
 @MainActor
 public enum UsersModule {
@@ -24,17 +16,5 @@ public enum UsersModule {
     public static func register(network: NetworkService) {
         let dependencies = UsersDependencies(network: network)
         viewModels = { dependencies.viewModels }
-        registerPublicEntryPoint()
-    }
-
-    private static func registerPublicEntryPoint() {
-        // MARK: Register the public entry points
-        RouteRegistry.shared.register(UsersDestination.self) { destination in
-            switch destination {
-            case .details(let id, let onDetailAction):
-                return AnyRoute(UsersRoute.userDetail(id: id, onDetailAction: onDetailAction))
-            }
-        }
-        DeepLinkRouter.shared.register(UsersDeepLinkMapper())
     }
 }

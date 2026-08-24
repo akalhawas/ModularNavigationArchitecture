@@ -957,7 +957,7 @@ Expected for each: the app switches to the Services tab and pushes the correspon
 xcrun simctl openurl booted "com.ali.modularnavigationexample://users/list"
 xcrun simctl openurl booted "com.ali.modularnavigationexample://nonsense/details?id=1"
 ```
-Expected for each: no navigation happens (both mappers return `nil` for these).
+Expected for each: **the app traps (`SIGTRAP`/`EXC_BREAKPOINT`) in a Debug build.** Both mappers correctly return `nil` for these URLs, but `DeepLinkRouter.resolve(url:)` (in the external `Navigation`/`SharedLibraries` package, unmodified by this plan) calls `assertionFailure` when every registered mapper returns `nil` — this is documented, intentional, pre-existing behavior (see this README's own "Gotchas & design notes": "Both `RouteRegistry.resolve(_:)` and `DeepLinkRouter.resolve(url:)` trap in Debug/test builds and return `nil` in Release when nothing matches... intentional"). It is not a regression introduced by this plan — the same trap would have fired for any URL matching zero registered mappers before this refactor too, since `DeepLinkRouter` itself is untouched. Do not attempt to fix this; it is out of scope (an external package).
 
 - [ ] **Step 6: Manually verify the in-app cross-feature button**
 

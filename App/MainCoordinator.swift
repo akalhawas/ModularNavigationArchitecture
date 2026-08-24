@@ -43,3 +43,17 @@ extension MainCoordinator {
         }
     }
 }
+
+// MARK: Cross-feature navigation
+extension MainCoordinator {
+    /// Colors' one outbound cross-feature seam. Resolves to Users' detail
+    /// screen and navigates on whichever coordinator Colors itself is
+    /// hosted under — this is the only file in the app that knows Colors'
+    /// button leads to Users.
+    func handleColorsSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {
+        guard let route = RouteRegistry.shared.resolve(
+            UsersDestination.details(id: id, onDetailAction: onReturn)
+        ) else { return }
+        coordinator.navigate(to: route)
+    }
+}

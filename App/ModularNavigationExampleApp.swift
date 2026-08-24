@@ -17,9 +17,9 @@ struct ModularizedByFeatureApp: App {
     @StateObject var mainCoordinator = MainCoordinator()
 
     init() {
-        AppComposition.bootstrapFeatures()
+        AppComposition.bootstrapFeatures(mainCoordinator: mainCoordinator)
     }
-    
+
     var body: some Scene {
         WindowGroup {
             RootView(coordinator: mainCoordinator)

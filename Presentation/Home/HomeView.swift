@@ -20,7 +20,8 @@ struct HomeView: View {
 }
 
 #Preview {
-    let _ = AppComposition.bootstrapFeatures()
+    let mainCoordinator = MainCoordinator()
+    let _ = AppComposition.bootstrapFeatures(mainCoordinator: mainCoordinator)
     HomeView()
-        .environmentObject(MainCoordinator())
+        .environmentObject(mainCoordinator)
 }

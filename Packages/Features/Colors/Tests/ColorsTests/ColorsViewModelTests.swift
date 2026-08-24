@@ -1,15 +1,14 @@
-//
-//  ColorsViewModelTests.swift
-//  ColorsTests
-//
-
 import XCTest
 @testable import Colors
+import Navigation
 
 final class ColorsViewModelTests: XCTestCase {
 
-    private func makeSUT(useCase: MockFetchColorsUseCase = MockFetchColorsUseCase()) -> ColorsViewModel {
-        ColorsViewModel(fetchColorsUseCase: useCase)
+    private func makeSUT(
+        useCase: MockFetchColorsUseCase = MockFetchColorsUseCase(),
+        crossFeatureActions: ColorsCrossFeatureActions = ColorsCrossFeatureActions(onSecondaryAction: { _, _, _ in })
+    ) -> ColorsViewModel {
+        ColorsViewModel(fetchColorsUseCase: useCase, crossFeatureActions: crossFeatureActions)
     }
 
     private static let mockColor = AppColor(
@@ -105,5 +104,19 @@ final class ColorsViewModelTests: XCTestCase {
         // Assert
         XCTAssertEqual(sut.colors, [Self.mockColor])
         XCTAssertEqual(useCase.executeCallCount, 2)
+    }
+
+    @MainActor
+    func testExposesTheInjectedCrossFeatureActions() {
+        // Arrange
+        var capturedId: Int?
+        let actions = ColorsCrossFeatureActions(onSecondaryAction: { _, id, _ in capturedId = id })
+        let sut = makeSUT(crossFeatureActions: actions)
+
+        // Act
+        sut.crossFeatureActions.onSecondaryAction(NavigationCoordinator(), 7, {})
+
+        // Assert
+        XCTAssertEqual(capturedId, 7)
     }
 }

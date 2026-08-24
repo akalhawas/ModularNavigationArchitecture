@@ -13,11 +13,14 @@ final class ColorsViewModel: ObservableObject {
     @Published private(set) var colors: [AppColor] = []
     @Published private(set) var errorMessage: String?
 
+    let crossFeatureActions: ColorsCrossFeatureActions
+
     private let fetchColorsUseCase: FetchColorsUseCase
     private var cancellables = Set<AnyCancellable>()
 
-    init(fetchColorsUseCase: FetchColorsUseCase) {
+    init(fetchColorsUseCase: FetchColorsUseCase, crossFeatureActions: ColorsCrossFeatureActions) {
         self.fetchColorsUseCase = fetchColorsUseCase
+        self.crossFeatureActions = crossFeatureActions
     }
 
     func fetchColors(page: Int = 1) {
@@ -32,12 +35,10 @@ final class ColorsViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    /// Passed as `UsersDestination.details(id:onDetailAction:)`'s callback.
-    /// Called directly by `UserDetailViewModel.notifyDetailAction()` when
-    /// its own action happens — independent of whether/when the user has
-    /// actually navigated back to this screen. Fill in whatever Colors
-    /// needs to do in response.
-    func didReturnFromUsers() {
-        print("DEBUG: didReturnFromUsers")
+    /// Called when the secondary-action screen this feature navigated into
+    /// reports its own action happened. Fill in whatever Colors needs to do
+    /// in response.
+    func didReturnFromSecondaryAction() {
+        print("DEBUG: didReturnFromSecondaryAction")
     }
 }

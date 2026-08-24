@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Navigation
-import UsersAPI
 
 struct ColorsView: View {
 
@@ -29,11 +28,9 @@ struct ColorsView: View {
                 }
 
             Button {
-                let destination = UsersDestination.details(id: 1) {
-                    viewModel.didReturnFromUsers()
+                viewModel.crossFeatureActions.onSecondaryAction(coordinator, 1) {
+                    viewModel.didReturnFromSecondaryAction()
                 }
-                guard let route = RouteRegistry.shared.resolve(destination) else { return }
-                coordinator.navigate(to: route)
             } label: {
                 Text("Users")
                     .padding()
@@ -41,7 +38,7 @@ struct ColorsView: View {
                     .background(Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(8)
-            }            
+            }
         }
     }
 
@@ -114,7 +111,8 @@ extension Color {
     NavigationStack {
         ColorsView(
             viewModel: ColorsViewModel(
-                fetchColorsUseCase: FetchColorsUseCaseImp(repository: ColorRepositoryMock())
+                fetchColorsUseCase: FetchColorsUseCaseImp(repository: ColorRepositoryMock()),
+                crossFeatureActions: ColorsCrossFeatureActions(onSecondaryAction: { _, _, _ in })
             )
         )
     }

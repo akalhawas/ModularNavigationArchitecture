@@ -19,11 +19,11 @@ import ColorsAPI
 public enum ColorsModule {
 
     static var viewModels: () -> ColorsViewModels = {
-        fatalError("ColorsModule not registered — call ColorsModule.register(network:) at app launch")
+        fatalError("ColorsModule not registered — call ColorsModule.register(network:crossFeatureActions:) at app launch")
     }
 
-    public static func register(network: NetworkService) {
-        let dependencies = ColorsDependencies(network: network)
+    public static func register(network: NetworkService, crossFeatureActions: ColorsCrossFeatureActions) {
+        let dependencies = ColorsDependencies(network: network, crossFeatureActions: crossFeatureActions)
         viewModels = { dependencies.viewModels }
         registerPublicEntryPoint()
     }

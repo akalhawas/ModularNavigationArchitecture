@@ -14,11 +14,11 @@ struct ColorsDependencies {
     let useCases: ColorsUseCases
     let viewModels: ColorsViewModels
 
-    init(network: NetworkService) {
+    init(network: NetworkService, crossFeatureActions: ColorsCrossFeatureActions) {
         self.networkService = network
         self.repositories = ColorsDependencies.createRepositories(networkService: network)
         self.useCases = ColorsUseCases(repositories: repositories)
-        self.viewModels = ColorsViewModels(useCases: useCases)
+        self.viewModels = ColorsViewModels(useCases: useCases, crossFeatureActions: crossFeatureActions)
     }
 
     private static func createRepositories(networkService: NetworkService) -> ColorsRepositories {

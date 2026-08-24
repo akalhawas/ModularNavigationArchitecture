@@ -14,10 +14,12 @@ import Combine
 @main
 struct ModularizedByFeatureApp: App {
 
-    @StateObject var mainCoordinator = MainCoordinator()
+    @StateObject private var mainCoordinator: MainCoordinator
 
     init() {
-        AppComposition.bootstrapFeatures(mainCoordinator: mainCoordinator)
+        let coordinator = MainCoordinator()
+        AppComposition.bootstrapFeatures(mainCoordinator: coordinator)
+        _mainCoordinator = StateObject(wrappedValue: coordinator)
     }
 
     var body: some Scene {

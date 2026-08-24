@@ -1,4 +1,3 @@
-// Packages/Features/Colors/Sources/Colors/Dependencies/ColorsCrossFeatureActions.swift
 import Navigation
 
 /// The one outbound cross-feature seam Colors exposes, named for what

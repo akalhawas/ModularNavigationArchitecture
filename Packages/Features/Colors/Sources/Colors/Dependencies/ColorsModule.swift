@@ -1,4 +1,3 @@
-// Packages/Features/Colors/Sources/Colors/Dependencies/ColorsModule.swift
 import NetworkService
 
 /// Resolves this feature's dependencies without callers having to build

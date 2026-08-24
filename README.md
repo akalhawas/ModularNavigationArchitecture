@@ -31,7 +31,7 @@ Three things this package is designed to make easy, and which this document cove
 | `NavigationHost` / `PresentedNavigationHost` | `Navigation` | SwiftUI wrappers that turn a `NavigationCoordinator` into an actual `NavigationStack`. |
 | `NavigationDestination` | `Navigation` (protocol) | A small allowlist of entry points into one feature, reachable from outside it. Declared `public` inside `App/Destinations/`, not inside the feature's own package — the App owns every feature's destination, so no feature ever depends on another feature's package to reach it. |
 | `RouteRegistry` | `Navigation` | Resolves a `NavigationDestination` into a real `AnyRoute`, without the caller knowing the feature's route type. |
-| `DeepLinkMapper` / `DeepLinkRouter` | `Navigation` | Turns a `URL` into a `NavigationDestination`. `DeepLinkRouter.shared` is a singleton; each feature registers its own mapper into it at startup, the same way it registers with `RouteRegistry.shared`. |
+| `DeepLinkMapper` / `DeepLinkRouter` | `Navigation` | Turns a `URL` into a `NavigationDestination`. `DeepLinkRouter.shared` is a singleton; the App registers every feature's mapper into it at startup from `AppComposition`, the same way it registers destinations with `RouteRegistry.shared`. |
 
 The flows in one line each:
 
@@ -268,8 +268,8 @@ No feature package ever depends on another feature's package, or on `NavigationD
 
 ## Gotchas & design notes
 
-- **`RouteRegistry.shared` and `DeepLinkRouter.shared` are global singletons**, populated by each feature's own
-  `register()`, called once from `AppComposition.bootstrapFeatures()` in the app's `init()`. Calling either
+- **`RouteRegistry.shared` and `DeepLinkRouter.shared` are global singletons**, populated once from
+  `AppComposition.bootstrapFeatures()` in the app's `init()`. Calling either
   `resolve` before that has run will hit the miss path below. For unit tests, prefer creating fresh
   `RouteRegistry()`/`DeepLinkRouter(mappers: [])` instances rather than touching `.shared`, so tests don't leak
   registrations into each other.

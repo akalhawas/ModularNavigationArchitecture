@@ -315,8 +315,8 @@ Runs on macOS directly — no simulator needed, finishes in well under a second.
 `Tests/NavigationTests`: `NavigationCoordinatorTests`, `RouteRegistryTests`, `AnyRouteTests`, `DeepLinkRouterTests`,
 and `URLQueryItemTests`.
 
-For this repo's own feature-level coverage — e.g. `FeatureYDeepLinkMapperTests`, which pins the exact URL shape a
-real OS deep link into `FeatureY` must have — run the package's own test target, since the app scheme itself isn't
+For this repo's own feature-level coverage — e.g. `ColorsViewModelTests` or `UsersViewModelTests`, which test the
+feature's views and use cases — run the package's own test target, since the app scheme itself isn't
 currently wired for the test action:
 
 ```

@@ -6,7 +6,7 @@
 
 **Architecture:** `Colors` and `Users` keep only their own `Route` (internal navigation) and business logic; they lose all `NavigationDestination`/`RouteRegistry`/`DeepLinkRouter` involvement, including for their own destination. `App/Destinations/` and `App/Routing/` (plain files in the existing Xcode `App` target — it's a `PBXFileSystemSynchronizedRootGroup`, so no project-file editing is needed to add files there) own every feature's destination type and deep-link mapper. `AppComposition` registers everything at bootstrap; `MainCoordinator` gains the behavior for Colors' one outbound cross-feature action, extending its existing deep-link-dispatch role. Colors exposes that one action as `ColorsCrossFeatureActions`, a struct of closures it defines in its own vocabulary (never naming `Users`), injected via `ColorsModule.register(network:crossFeatureActions:)`.
 
-**Tech Stack:** Swift 6.2, SwiftUI, Swift Package Manager (local path packages + one remote package `SharedLibraries` for `Navigation`/`NetworkService`), XCTest (`swift test` at the package level — there is no Xcode unit test target for the `App` target itself, see Task 4's Testing note).
+**Tech Stack:** Swift 6.2, SwiftUI, Swift Package Manager (local path packages + one remote package `SharedLibraries` for `Navigation`/`NetworkService`), XCTest run via `xcodebuild test -scheme <Package>-Package -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'` at the package level (plain `swift test` fails in this environment — `SharedLibraries`' `NetworkService` hits Combine-availability build errors under SwiftPM's default macOS deployment target; there is no Xcode unit test target for the `App` target itself, see Task 4's Testing note).
 
 **Spec:** `docs/superpowers/specs/2026-08-24-app-owned-cross-feature-navigation-design.md`
 
@@ -16,7 +16,7 @@
 - No feature's code may reference `NavigationDestination`, `RouteRegistry`, `DeepLinkRouter`, or another feature's `Route`/destination — not even for the feature's own destination.
 - Every identifier a feature defines for its outbound cross-feature seam must describe the feature's own concern (e.g. `onSecondaryAction`, `didReturnFromSecondaryAction`) — never the name of the target feature.
 - `App/Destinations/*` and `App/Routing/*` are plain Swift files in the existing `App` Xcode target — do not create a new SPM package for them (per spec §1).
-- Package-level verification is `swift build`/`swift test` run from inside `Packages/Features/Colors` or `Packages/Features/Users`. Full-app verification is `xcodebuild build -scheme ModularNavigationExample -destination 'generic/platform=iOS Simulator'` (or an actual named simulator via `-destination 'platform=iOS Simulator,name=<simulator>'`).
+- Package-level verification is `xcodebuild test -scheme Colors-Package -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'` (respectively `Users-Package`) run from inside `Packages/Features/Colors` or `Packages/Features/Users` — **not** `swift test`, which fails in this environment on a pre-existing `SharedLibraries` Combine-availability issue unrelated to this plan (confirmed during pre-flight: both packages pass 31/31 tests via the `xcodebuild` form). If `iPhone 16`/`OS=18.5` isn't available on the machine running this plan, substitute any installed simulator from `xcrun simctl list devices available`. Full-app verification is `xcodebuild build -scheme ModularNavigationExample -destination 'generic/platform=iOS Simulator'`.
 
 ---
 
@@ -315,7 +315,7 @@ Only `makeSUT`'s signature (adds the `crossFeatureActions` parameter with a no-o
 
 - [ ] **Step 2: Run the test to verify it fails to compile**
 
-Run: `cd Packages/Features/Colors && swift test --filter ColorsViewModelTests`
+Run (from `Packages/Features/Colors`): `xcodebuild test -scheme Colors-Package -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' -only-testing:ColorsTests/ColorsViewModelTests`
 Expected: FAIL to build — `ColorsCrossFeatureActions` doesn't exist yet, and `ColorsViewModel.init` doesn't accept `crossFeatureActions:`.
 
 - [ ] **Step 3: Create `ColorsCrossFeatureActions`**
@@ -562,13 +562,13 @@ Leave the rest of the file (`ColorRow`, the `Color(hex:)` extension, the `#Previ
 
 - [ ] **Step 8: Run the tests to verify they pass**
 
-Run: `cd Packages/Features/Colors && swift test --filter ColorsViewModelTests`
+Run (from `Packages/Features/Colors`): `xcodebuild test -scheme Colors-Package -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' -only-testing:ColorsTests/ColorsViewModelTests`
 Expected: PASS — all existing `ColorsViewModelTests` cases plus `testExposesTheInjectedCrossFeatureActions`.
 
 - [ ] **Step 9: Run the full Colors package test suite**
 
-Run: `cd Packages/Features/Colors && swift test`
-Expected: PASS. `Colors` still depends on `Users`/`ColorsAPI`/`UsersAPI` at this point (Task 3 removes that), so this should build and pass exactly as before, with the new cross-feature-actions behavior added.
+Run (from `Packages/Features/Colors`): `xcodebuild test -scheme Colors-Package -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'`
+Expected: PASS (31 tests, per the pre-flight baseline run). `Colors` still depends on `Users`/`ColorsAPI`/`UsersAPI` at this point (Task 3 removes that), so this should build and pass exactly as before, with the new cross-feature-actions behavior added.
 
 - [ ] **Step 10: Commit**
 
@@ -604,7 +604,7 @@ EOF
 - Consumes: nothing new.
 - Produces: `Colors` and `Users` packages that depend on only `Navigation` + `NetworkService`, with `ColorsModule.register(network:crossFeatureActions:)` and `UsersModule.register(network:)` doing DI wiring only — no `RouteRegistry`/`DeepLinkRouter` reference anywhere. Consumed by Task 4.
 
-This is the task where the feature-to-feature dependency actually disappears from the package graph. After this task, `Colors` and `Users` will not build against each other or against `RouteRegistry`/`DeepLinkRouter` at all — but the `App` Xcode target will **not** build until Task 4 rewires `AppComposition`, since `AppComposition.bootstrapFeatures()` still calls the old one-argument `ColorsModule.register(network:)` and still relies on each feature to self-register. That's expected — this task's verification is at the package level (`swift build`/`swift test`), not the app level.
+This is the task where the feature-to-feature dependency actually disappears from the package graph. After this task, `Colors` and `Users` will not build against each other or against `RouteRegistry`/`DeepLinkRouter` at all — but the `App` Xcode target will **not** build until Task 4 rewires `AppComposition`, since `AppComposition.bootstrapFeatures()` still calls the old one-argument `ColorsModule.register(network:)` and still relies on each feature to self-register. That's expected — this task's verification is at the package level (`xcodebuild test -scheme <Package>-Package ...`), not the app level.
 
 - [ ] **Step 1: Remove `ColorsAPI`/`UsersAPI` from both `Package.swift` files**
 
@@ -738,13 +738,13 @@ public enum UsersModule {
 
 - [ ] **Step 5: Run the Colors package test suite**
 
-Run: `cd Packages/Features/Colors && swift test`
+Run (from `Packages/Features/Colors`): `xcodebuild test -scheme Colors-Package -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'`
 Expected: PASS. `Colors` now resolves with no dependency on `Users` at all.
 
 - [ ] **Step 6: Run the Users package test suite**
 
-Run: `cd Packages/Features/Users && swift test`
-Expected: PASS. `UsersDeepLinkMapperTests` is gone (its coverage moves to Task 4's manual verification), and every remaining test passes.
+Run (from `Packages/Features/Users`): `xcodebuild test -scheme Users-Package -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'`
+Expected: PASS with 0 failures. The total test count will be lower than the pre-flight baseline's 31, since `UsersDeepLinkMapperTests` (4 tests) is deleted in Step 2 of this task — check for "0 failures", not a specific count. `UsersDeepLinkMapperTests` is gone (its coverage moves to Task 4's manual verification), and every remaining test passes.
 
 - [ ] **Step 7: Confirm there is no remaining cross-reference**
 

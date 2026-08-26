@@ -12,23 +12,23 @@ import Combine
 @_exported import Navigation
 
 @main
-struct ModularizedByFeatureApp: App {
+struct ModularNavigationExampleApp: App {
 
-    @StateObject private var mainCoordinator: MainCoordinator
+    @StateObject private var appCoordinator: AppCoordinator
 
     init() {
-        let coordinator = MainCoordinator()
-        AppComposition.bootstrapFeatures(mainCoordinator: coordinator)
-        _mainCoordinator = StateObject(wrappedValue: coordinator)
+        let coordinator = AppCoordinator()
+        AppComposition.bootstrapFeatures(appCoordinator: coordinator)
+        _appCoordinator = StateObject(wrappedValue: coordinator)
     }
 
     var body: some Scene {
         WindowGroup {
-            RootView(coordinator: mainCoordinator)
+            TabBarView(appCoordinator: appCoordinator)
                 .onOpenURL { url in
-                    guard let destination = DeepLinkRouter.shared.resolve(url: url)
+                    guard let route = DeepLinkRouter.shared.resolve(url: url)
                     else { return }
-                    mainCoordinator.handleDeepLinkNavigation(to: destination)
+                    appCoordinator.handleDeepLinkNavigation(to: route)
                 }
         }
     }

@@ -17,23 +17,13 @@ struct ColorDetailView: View {
     }
 
     var body: some View {
-        VStack {
-            content
-                .navigationTitle("Details")
-                .task {
-                    if viewModel.color == nil {
-                        viewModel.fetchColor()
-                    }
+        content
+            .navigationTitle("Details")
+            .task {
+                if viewModel.color == nil {
+                    viewModel.fetchColor()
                 }
-            
-            Button {
-                coordinator.dismissSheet()
-
-            } label: {
-                Text("Back")
             }
-            .buttonStyle(.plain)
-        }
     }
 
     @ViewBuilder

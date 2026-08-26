@@ -11,6 +11,8 @@ import NetworkService
 enum UserEndpoint: Endpoint {
     case list(page: Int)
     case detail(id: Int)
+    /// Placeholder path — point this at the real permission-check endpoint.
+    case permission(id: Int)
 
     var baseURL: URL {
         URL(string: "https://reqres.in/api")!
@@ -22,6 +24,8 @@ enum UserEndpoint: Endpoint {
             return "/users"
         case .detail(let id):
             return "/users/\(id)"
+        case .permission(let id):
+            return "/users/\(id)/permission"
         }
     }
 
@@ -37,7 +41,7 @@ enum UserEndpoint: Endpoint {
         switch self {
         case .list(let page):
             return [URLQueryItem(name: "page", value: "\(page)")]
-        case .detail:
+        case .detail, .permission:
             return nil
         }
     }

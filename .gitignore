@@ -15,3 +15,7 @@ DerivedData/
 # Playground
 timeline.xctimeline
 playground.xcworkspace
+
+# Test results
+*.xcresult
+Tests/

@@ -50,14 +50,19 @@
 			path = Packages;
 			sourceTree = "<group>";
 		};
-		23CCDD3D30323E9100A71BDF /* AppDependencies */ = {
+		23CCDD3D30323E9100A71BDF /* Dependencies */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = AppDependencies;
+			path = Dependencies;
 			sourceTree = "<group>";
 		};
 		23FAF0CE30398B050077DA6D /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		23FAF41B303CD3570077DA6D /* Coordinator */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -82,7 +87,8 @@
 			isa = PBXGroup;
 			children = (
 				2304B0983000DDD300423F1C /* ModularNavigationExample-Info.plist */,
-				23CCDD3D30323E9100A71BDF /* AppDependencies */,
+				23FAF41B303CD3570077DA6D /* Coordinator */,
+				23CCDD3D30323E9100A71BDF /* Dependencies */,
 				2304AFF23000D31D00423F1C /* App */,
 				2304B0603000D41300423F1C /* Presentation */,
 				234696E130024F5500E903E3 /* Packages */,
@@ -124,8 +130,9 @@
 			);
 			fileSystemSynchronizedGroups = (
 				2304AFF23000D31D00423F1C /* App */,
-				23CCDD3D30323E9100A71BDF /* AppDependencies */,
+				23CCDD3D30323E9100A71BDF /* Dependencies */,
 				23FAF0CE30398B050077DA6D /* Resources */,
+				23FAF41B303CD3570077DA6D /* Coordinator */,
 			);
 			name = ModularNavigationExample;
 			packageProductDependencies = (

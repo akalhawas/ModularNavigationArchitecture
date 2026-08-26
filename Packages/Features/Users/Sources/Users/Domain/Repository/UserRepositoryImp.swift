@@ -23,4 +23,10 @@ final class UserRepositoryImp: UserRepository {
     func fetchUser(id: Int) -> AnyPublisher<UserDetailResponse, Error> {
         networkService.request(UserEndpoint.detail(id: id))
     }
+
+    func checkPermission(userId: Int) -> AnyPublisher<Bool, Error> {
+        networkService.request(UserEndpoint.permission(id: userId))
+            .map { (response: PermissionResponse) in response.allowed }
+            .eraseToAnyPublisher()
+    }
 }

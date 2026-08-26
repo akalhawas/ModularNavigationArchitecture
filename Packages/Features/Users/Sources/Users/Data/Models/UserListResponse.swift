@@ -5,7 +5,7 @@
 //  Created by ali alhawas on 23/07/2026.
 //
 
-struct UserListResponse: Decodable {
+public struct UserListResponse: Decodable {
     let page: Int
     let perPage: Int
     let total: Int

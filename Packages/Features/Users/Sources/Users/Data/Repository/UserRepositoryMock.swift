@@ -26,6 +26,10 @@ final class UserRepositoryMock: UserRepository {
         return Just(response).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 
+    func checkPermission(userId: Int) -> AnyPublisher<Bool, Error> {
+        Just(true).setFailureType(to: Error.self).eraseToAnyPublisher()
+    }
+
     private static let mockUser = User(
         id: 1,
         email: "mock.user@example.com",

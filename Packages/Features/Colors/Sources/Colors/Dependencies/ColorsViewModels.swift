@@ -8,16 +8,19 @@
 final class ColorsViewModels {
 
     private let useCases: ColorsUseCases
-    private let crossFeatureActions: ColorsCrossFeatureActions
+    private weak var crossFeatureDelegate: ColorsCrossFeatureDelegate?
 
-    init(useCases: ColorsUseCases, crossFeatureActions: ColorsCrossFeatureActions) {
+    init(useCases: ColorsUseCases, crossFeatureDelegate: ColorsCrossFeatureDelegate? = nil) {
         self.useCases = useCases
-        self.crossFeatureActions = crossFeatureActions
+        self.crossFeatureDelegate = crossFeatureDelegate
     }
 
     @MainActor
     func makeColorsViewModel() -> ColorsViewModel {
-        ColorsViewModel(fetchColorsUseCase: useCases.fetchColorsUseCase, crossFeatureActions: crossFeatureActions)
+        ColorsViewModel(
+            fetchColorsUseCase: useCases.fetchColorsUseCase,
+            crossFeatureDelegate: crossFeatureDelegate
+        )
     }
 
     @MainActor

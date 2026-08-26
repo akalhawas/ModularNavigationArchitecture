@@ -13,15 +13,17 @@ struct HomeView: View {
 
     var body: some View {        
         VStack {
-
+            ScrollView {
+                ColorsModule.headerHomeView(items: 2)
+            }
         }
         .navigationTitle("Home")
     }
 }
 
 #Preview {
-    let mainCoordinator = MainCoordinator()
-    let _ = AppComposition.bootstrapFeatures(mainCoordinator: mainCoordinator)
+    let appCoordinator = AppCoordinator()
+    let _ = AppComposition.bootstrapFeatures(appCoordinator: appCoordinator)
     HomeView()
-        .environmentObject(mainCoordinator)
+        .environmentObject(appCoordinator)
 }

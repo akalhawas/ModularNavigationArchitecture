@@ -6,24 +6,40 @@
 //
 
 import SwiftUI
+import Navigation
 
 struct UserDetailView: View {
 
     @StateObject private var viewModel: UserDetailViewModel
-
+    @EnvironmentObject var coordinator: NavigationCoordinator
+    
     init(viewModel: UserDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
         VStack {
-            content
-                .navigationTitle("Details")
-                .task {
-                    if viewModel.user == nil {
-                        viewModel.fetchUser()
+            VStack {
+                content
+                    .navigationTitle("Details")
+                    .task {
+                        if viewModel.user == nil {
+                            viewModel.fetchUser()
+                        }
                     }
+                
+                Button {
+                    viewModel.notifyDetailAction()
+                    coordinator.pop()
+                } label: {
+                    Text("Back")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                 }
+            }
         }
     }
 

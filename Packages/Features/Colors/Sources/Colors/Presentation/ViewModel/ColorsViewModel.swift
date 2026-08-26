@@ -13,14 +13,14 @@ final class ColorsViewModel: ObservableObject {
     @Published private(set) var colors: [AppColor] = []
     @Published private(set) var errorMessage: String?
 
-    let crossFeatureActions: ColorsCrossFeatureActions
+    weak var crossFeatureDelegate: ColorsCrossFeatureDelegate?
 
     private let fetchColorsUseCase: FetchColorsUseCase
     private var cancellables = Set<AnyCancellable>()
 
-    init(fetchColorsUseCase: FetchColorsUseCase, crossFeatureActions: ColorsCrossFeatureActions) {
+    init(fetchColorsUseCase: FetchColorsUseCase, crossFeatureDelegate: ColorsCrossFeatureDelegate?) {
         self.fetchColorsUseCase = fetchColorsUseCase
-        self.crossFeatureActions = crossFeatureActions
+        self.crossFeatureDelegate = crossFeatureDelegate
     }
 
     func fetchColors(page: Int = 1) {
@@ -35,10 +35,15 @@ final class ColorsViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    /// Called when the secondary-action screen this feature navigated into
-    /// reports its own action happened. Fill in whatever Colors needs to do
-    /// in response.
     func didReturnFromSecondaryAction() {
+        colors = colors.dropLast()
         print("DEBUG: didReturnFromSecondaryAction")
+    }
+
+    /// Same idea as `didReturnFromSecondaryAction()`, for the delegate-driven
+    /// seam instead of the closure-driven one.
+    func didReturnFromTertiaryAction() {
+        colors = colors.dropLast()
+        print("DEBUG: didReturnFromTertiaryAction")
     }
 }

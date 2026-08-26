@@ -28,8 +28,8 @@ struct ColorsView: View {
                 }
 
             Button {
-                viewModel.crossFeatureActions.onSecondaryAction(coordinator, 1) {
-                    viewModel.didReturnFromSecondaryAction()
+                viewModel.crossFeatureDelegate?.onPrimaryAction(coordinator: coordinator, id: 2) {
+                    viewModel.didReturnFromTertiaryAction()
                 }
             } label: {
                 Text("Users")
@@ -54,8 +54,8 @@ struct ColorsView: View {
         } else {
             List(viewModel.colors) { color in
                 Button {
-                    coordinator.presentSheet(ColorsRoute.colorDetail(id: color.id))
 //                    coordinator.navigate(to: ColorsRoute.colorDetail(id: color.id))
+                    coordinator.presentSheet(ColorsRoute.colorDetail(id: color.id))
                 } label: {
                     ColorRow(color: color)
                 }
@@ -107,12 +107,17 @@ extension Color {
     }
 }
 
+private final class PreviewColorsCrossFeatureDelegate: ColorsCrossFeatureDelegate {
+    func onPrimaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {}
+    func onSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {}
+}
+
 #Preview {
     NavigationStack {
         ColorsView(
             viewModel: ColorsViewModel(
                 fetchColorsUseCase: FetchColorsUseCaseImp(repository: ColorRepositoryMock()),
-                crossFeatureActions: ColorsCrossFeatureActions(onSecondaryAction: { _, _, _ in })
+                crossFeatureDelegate: PreviewColorsCrossFeatureDelegate()
             )
         )
     }

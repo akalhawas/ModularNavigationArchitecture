@@ -15,24 +15,24 @@ enum TabBar: String, CaseIterable, Identifiable {
 
 struct TabBarView: View {
 
-    @ObservedObject var mainCoordinator: MainCoordinator
+    @ObservedObject var appCoordinator: AppCoordinator
 
     var body: some View {
-        TabView(selection: $mainCoordinator.selectedTab) {
-            
-            NavigationHost(coordinator: mainCoordinator.homeCoordinator) {
+        TabView(selection: $appCoordinator.selectedTab) {
+
+            NavigationHost(coordinator: appCoordinator.homeCoordinator) {
                 HomeView()
-                    .environmentObject(mainCoordinator.homeCoordinator)
+                    .environmentObject(appCoordinator.homeCoordinator)
             }
             .tabItem {
                 Image(systemName: "house")
                 Text("Home")
             }
             .tag(TabBar.home)
-            
-            NavigationHost(coordinator: mainCoordinator.servicesCoordinator) {
+
+            NavigationHost(coordinator: appCoordinator.servicesCoordinator) {
                 ServicesView()
-                    .environmentObject(mainCoordinator.servicesCoordinator)
+                    .environmentObject(appCoordinator.servicesCoordinator)
             }
             .tabItem {
                 Image(systemName: "square.grid.2x2")
@@ -45,14 +45,5 @@ struct TabBarView: View {
 }
 
 #Preview {
-    TabBarView(mainCoordinator: .init())
-}
-
-struct RootView: View {
-
-    @ObservedObject var coordinator: MainCoordinator
-
-    var body: some View {
-        TabBarView(mainCoordinator: coordinator)
-    }
+    TabBarView(appCoordinator: .init())
 }

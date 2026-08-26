@@ -20,4 +20,8 @@ final class UsersUseCases {
     lazy var fetchUserDetailUseCase: FetchUserDetailUseCase = FetchUserDetailUseCaseImp(
         repository: repositories.usersRepository
     )
+
+    lazy var checkUserPermissionUseCase: CheckUserPermissionUseCase = CheckUserPermissionUseCaseImp(
+        repository: repositories.usersRepository
+    )
 }

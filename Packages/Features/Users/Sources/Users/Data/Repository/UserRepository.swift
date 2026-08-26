@@ -10,4 +10,5 @@ import Combine
 protocol UserRepository {
     func fetchUsers(page: Int) -> AnyPublisher<UserListResponse, Error>
     func fetchUser(id: Int) -> AnyPublisher<UserDetailResponse, Error>
+    func checkPermission(userId: Int) -> AnyPublisher<Bool, Error>
 }

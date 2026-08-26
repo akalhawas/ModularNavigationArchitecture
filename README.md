@@ -7,8 +7,8 @@ depending on another feature's *implementation* — views, use cases, networking
 Three things this package is designed to make easy, and which this document covers in order:
 
 1. **Internal navigation** — moving around inside a single feature.
-2. **Cross-feature navigation** — feature A sending the user into feature B by depending only on B's small `API`
-   target, never B's main target.
+2. **Cross-feature navigation** — feature A sending the user into feature B without feature A ever depending on
+   feature B's package — only the App does.
 3. **Deep linking** — a URL landing the user on a specific screen, sharing the resolution half of #2's pipeline.
 
 ## Contents
@@ -25,21 +25,21 @@ Three things this package is designed to make easy, and which this document cove
 
 | Type | Lives in | Purpose |
 |---|---|---|
-| `Route` | `Navigation` | Protocol your feature's screens conform to. Knows how to build its own view. |
+| `Route` | Each feature's own package | Protocol your feature's screens conform to. Knows how to build its own view. Declared `public`, so both the App and any feature that needs to navigate into you can use it directly. |
 | `AnyRoute` | `Navigation` | Type-erased `Route`, so a stack can hold routes from different `Route` types. |
 | `NavigationCoordinator` | `Navigation` | Owns one navigation stack's state: push/pop/present. One per independent flow. |
 | `NavigationHost` / `PresentedNavigationHost` | `Navigation` | SwiftUI wrappers that turn a `NavigationCoordinator` into an actual `NavigationStack`. |
-| `NavigationDestination` | `Navigation` (protocol) | A small allowlist of entry points into one feature, reachable from outside it. Declared `public` inside `App/Destinations/`, not inside the feature's own package — the App owns every feature's destination, so no feature ever depends on another feature's package to reach it. |
-| `RouteRegistry` | `Navigation` | Resolves a `NavigationDestination` into a real `AnyRoute`, without the caller knowing the feature's route type. |
-| `DeepLinkMapper` / `DeepLinkRouter` | `Navigation` | Turns a `URL` into a `NavigationDestination`. `DeepLinkRouter.shared` is a singleton; the App registers every feature's mapper into it at startup from `AppComposition`, the same way it registers destinations with `RouteRegistry.shared`. |
+| `<Feature>CrossFeatureDelegate` | The *calling* feature's own package | A `weak`, class-bound protocol the feature declares for the one seam it needs to reach outside itself, named for its own concern (e.g. `onPrimaryAction`). Implemented by the App's `AppCoordinator`. |
+| `DeepLinkMapper` / `DeepLinkRouter` | Each `DeepLinkMapper` conformance lives inside the feature's own package; `DeepLinkRouter` itself lives in `Navigation` | Turns a `URL` into an `AnyRoute` directly. `DeepLinkRouter.shared` is a singleton; each feature registers its own mapper into it from inside its own `Module.register(...)`, the same call that wires its DI. |
+| `AppCoordinator` | App target, `Coordinator/AppCoordinator.swift` | Owns the app's top-level `NavigationCoordinator`s and selected tab, conforms to every feature's cross-feature delegate protocol, and turns an already-resolved deep-link `AnyRoute` into a navigation. |
 
 The flows in one line each:
 
 - **Internal:** `View` → `coordinator.navigate(to: SomeRoute.case)` → pushed onto `NavigationCoordinator.routes` → rendered by `NavigationHost`'s `NavigationStack`.
-- **Cross-feature (in-app):** the feature calls a closure it defined itself and was handed at registration (e.g. `viewModel.crossFeatureActions.onSecondaryAction(...)`) → the App's implementation of that closure resolves the *other* feature's `Destination` via `RouteRegistry.shared.resolve(_:)` → `AnyRoute` → `coordinator.navigate(to:)`. The calling feature never sees the destination type or the registry — only the App does.
-- **Deep link (from the OS):** `URL` → `DeepLinkRouter.shared.resolve(url:)` (tries each registered `DeepLinkMapper` in order) → `NavigationDestination` → `RouteRegistry.shared.resolve(_:)` → `AnyRoute` → `coordinator.navigate(to:)`.
+- **Cross-feature (in-app):** the feature calls a `weak` delegate protocol it defined itself and was handed at registration (e.g. `viewModel.crossFeatureDelegate?.onPrimaryAction(...)`) → the App's `AppCoordinator` conforms to that protocol and, inside its conformance, builds the *other* feature's `Route` directly → `coordinator.navigate(to:)`. The calling feature never imports the other feature's package or route type — only the App does.
+- **Deep link (from the OS):** `URL` → `DeepLinkRouter.shared.resolve(url:)` (tries each registered `DeepLinkMapper` in order) → the mapper builds an `AnyRoute` from its own feature's `Route` type directly → `coordinator.navigate(to:)`.
 
-Both flows share the same back half (`RouteRegistry` → `AnyRoute` → `coordinator.navigate`), but only the App ever performs it. A feature's only involvement in cross-feature navigation is exposing a closure, in its own vocabulary, that the App fills in — the feature never imports `NavigationDestination`, `RouteRegistry`, or another feature's package.
+Both flows converge on the same final call, `coordinator.navigate(to:)`, but there's no shared App-owned translation table in between anymore — each feature's own `Route` type is public and used directly, either by that feature's own `DeepLinkMapper` or by `AppCoordinator`'s delegate conformance. A feature's only involvement in cross-feature navigation is exposing a delegate protocol, in its own vocabulary, that the App conforms to — the feature never imports another feature's package.
 
 ## 1. Internal navigation (within a single feature)
 
@@ -137,91 +137,91 @@ fresh `PresentedNavigationHost` — you don't construct that type directly eithe
 
 ## 2. Cross-feature navigation
 
-**A feature never imports another feature's package, or `NavigationDestination`/`RouteRegistry`/`DeepLinkRouter` at all.** Every destination, every deep-link mapper, and every `RouteRegistry`/`DeepLinkRouter` registration lives in the App target — `App/Destinations/`, `App/Routing/`, and `App/AppComposition.swift`. A feature's only role in reaching another feature is exposing a closure, named for its own concern, that the App fills in with the real behavior.
+**A feature never imports another feature's package.** Reaching another feature is always mediated by the App:
+a feature declares a small, `weak`, class-bound delegate protocol for the one seam it needs, and `AppCoordinator`
+(in the App target) is the sole conformer, since it's the only type that has both features in scope.
 
-### Step 1 — The feature declares the seam it needs, in its own vocabulary
+### Step 1 — The feature declares the seam it needs, as a protocol in its own vocabulary
 
 ```swift
-// Packages/Features/FeatureX/Sources/FeatureX/Dependencies/FeatureXCrossFeatureActions.swift
+// Packages/Features/FeatureX/Sources/FeatureX/Presentation/CrossFeature/FeatureXCrossFeatureDelegate.swift
 import Navigation
 
-public struct FeatureXCrossFeatureActions {
-    public let onSecondaryAction: (NavigationCoordinator, Int, @escaping () -> Void) -> Void
-    public init(onSecondaryAction: @escaping (NavigationCoordinator, Int, @escaping () -> Void) -> Void) {
-        self.onSecondaryAction = onSecondaryAction
+public protocol FeatureXCrossFeatureDelegate: AnyObject {
+    func onSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void)
+}
+```
+
+Name it for what `FeatureX` needs — never for the feature it happens to lead to. `FeatureXModule.register(network:crossFeatureDelegate:)` takes this protocol as an optional parameter and threads it down to wherever the button lives (through `FeatureXDependencies` → `FeatureXViewModels` → the view model), holding it `weak` at every step — the delegate is normally the App's coordinator, and a strong reference back to it would leak. The button calls `viewModel.crossFeatureDelegate?.onSecondaryAction(coordinator, someId) { /* ... */ }` and does nothing else.
+
+### Step 2 — The App conforms to the delegate and builds the target feature's route directly
+
+```swift
+// Coordinator/AppCoordinator.swift
+extension AppCoordinator: FeatureXCrossFeatureDelegate {
+    func onSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {
+        coordinator.navigate(to: FeatureYRoute.details(id: id, onDetailAction: onReturn), strategy: .push)
     }
 }
 ```
 
-Name it for what `FeatureX` needs — never for the feature it happens to lead to. `FeatureXModule.register(network:crossFeatureActions:)` takes this struct as a parameter and threads it down to wherever the button lives; the button calls `viewModel.crossFeatureActions.onSecondaryAction(coordinator, someId) { /* ... */ }` and does nothing else.
+No destination type, no registry lookup — `AppCoordinator` builds `FeatureYRoute` directly, because `FeatureYRoute` is `public` and the App target can see it.
 
-### Step 2 — The App declares the target feature's destination
-
-```swift
-// App/Destinations/FeatureYDestination.swift
-import Navigation
-
-public enum FeatureYDestination: NavigationDestination {
-    case details(id: Int)
-}
-```
-
-### Step 3 — The App registers `FeatureY`'s destination and builds `FeatureX`'s closure
+### Step 3 — The App wires the delegate in at registration
 
 ```swift
 // App/AppComposition.swift
-static func bootstrapFeatures(mainCoordinator: MainCoordinator) {
-    FeatureYModule.register(network: AppDependencies.shared.networkService)
-    registerFeatureYRouting() // RouteRegistry.shared.register(FeatureYDestination.self) { ... }
-
-    FeatureXModule.register(
-        network: AppDependencies.shared.networkService,
-        crossFeatureActions: FeatureXCrossFeatureActions(
-            onSecondaryAction: mainCoordinator.handleFeatureXSecondaryAction
+@MainActor
+enum AppComposition {
+    static func bootstrapFeatures(appCoordinator: AppCoordinator) {
+        FeatureYModule.register(network: AppDependencies.shared.networkService)
+        FeatureXModule.register(
+            network: AppDependencies.shared.networkService,
+            crossFeatureDelegate: appCoordinator
         )
-    )
-}
-```
-
-```swift
-// App/MainCoordinator.swift
-extension MainCoordinator {
-    func handleFeatureXSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {
-        guard let route = RouteRegistry.shared.resolve(FeatureYDestination.details(id: id)) else { return }
-        coordinator.navigate(to: route)
     }
 }
 ```
 
-`AppComposition` is the only file that imports both `FeatureX` and `FeatureY` (and every `Destination` type) together — because it's the only place that needs to. `MainCoordinator` holds the actual navigation behavior, extending the same role it already plays for deep links (`handleDeepLinkNavigation`). Neither feature package ever depends on the other, and neither imports `NavigationDestination`, `RouteRegistry`, or `DeepLinkRouter`.
+`App/ModularNavigationExampleApp.swift` re-exports every feature's package (`@_exported import FeatureX`,
+`@_exported import FeatureY`, `@_exported import Navigation`), so the rest of the App target — `AppComposition`,
+`AppCoordinator`, `TabBarView`, `ServicesView`, `HomeView` — can reference `FeatureXRoute`/`FeatureYRoute` directly
+without re-importing the feature package in every file. `AppCoordinator` is still the only place that resolves one
+feature's cross-feature request into another feature's screen; neither feature package ever imports the other, or
+imports the App.
 
 ## 3. Deep linking (from the OS)
 
-Deep-link mappers live in `App/Routing/`, next to the `Destination` types in `App/Destinations/` that they produce — not inside the feature packages. A feature package has no involvement in deep linking at all.
+Deep-link mappers live **inside each feature's own package**, next to that feature's `Route` type — not in the App
+target. A feature owns its own deep links because it owns its own routes; there's no shared destination type to
+translate through anymore.
 
 ```swift
-// App/Routing/FeatureYDeepLinkMapper.swift
+// Packages/Features/FeatureY/Sources/FeatureY/Presentation/Routing/FeatureYDeepLinkMapper.swift
 import Foundation
 import Navigation
 
 struct FeatureYDeepLinkMapper: DeepLinkMapper {
     // xcrun simctl openurl booted "com.ali.modularnavigationexample://featurey/details?id=1"
-    func map(url: URL) -> (any NavigationDestination)? {
+    func map(url: URL) -> AnyRoute? {
         guard url.host == "featurey", url.path == "/details",
-              let id = url.queryItem("id") else { return nil }
-        return FeatureYDestination.details(id: Int(id) ?? 0)
+              let id = url.queryItem("id").flatMap(Int.init) else { return nil }
+        return AnyRoute(FeatureYRoute.details(id: id))
     }
 }
 ```
 
+The feature registers its own mapper from inside its own `Module.register`, the same call that wires its DI:
+
 ```swift
-// App/AppComposition.swift
-private static func registerFeatureYRouting() {
-    RouteRegistry.shared.register(FeatureYDestination.self) { destination in
-        switch destination {
-        case .details(let id): return AnyRoute(FeatureYRoute.detail(id: id))
-        }
-    }
+// Packages/Features/FeatureY/Sources/FeatureY/Dependencies/FeatureYModule.swift
+public static func register(network: NetworkService) {
+    let dependencies = FeatureYDependencies(network: network)
+    viewModels = { dependencies.viewModels }
+    registerRouting()
+}
+
+private static func registerRouting() {
     DeepLinkRouter.shared.register(FeatureYDeepLinkMapper())
 }
 ```
@@ -229,57 +229,56 @@ private static func registerFeatureYRouting() {
 ```swift
 // App/ModularNavigationExampleApp.swift
 .onOpenURL { url in
-    guard let destination = DeepLinkRouter.shared.resolve(url: url) else { return }
-    mainCoordinator.handleDeepLinkNavigation(to: destination)
+    guard let route = DeepLinkRouter.shared.resolve(url: url) else { return }
+    appCoordinator.handleDeepLinkNavigation(to: route)
 }
 ```
 
 ```swift
-// App/MainCoordinator.swift
-func handleDeepLinkNavigation(to destination: any NavigationDestination) {
+// Coordinator/AppCoordinator.swift
+func handleDeepLinkNavigation(to route: AnyRoute) {
     allCoordinators.forEach { coordinator in
         coordinator.dismissSheet()
         coordinator.dismissFullScreen()
     }
 
-    switch destination {
-    default:
-        guard let route = RouteRegistry.shared.resolve(destination) else { return }
-        selectedTab = .services
-        servicesCoordinator.navigate(to: route, strategy: .push)
-    }
+    selectedTab = .services
+    servicesCoordinator.navigate(to: route, strategy: .resetStack)
 }
 ```
 
-Mappers are tried **in the order they were registered** — the order each feature's `registerXRouting()` runs in `AppComposition.bootstrapFeatures()`. The first mapper to return non-`nil` wins. If two mappers could plausibly match the same URL, register the more specific one first.
+`DeepLinkRouter.resolve(url:)` now hands back a ready-to-navigate `AnyRoute` directly — there's no second
+registry lookup step the way there used to be.
+
+Mappers are tried **in the order they were registered** — the order each feature's `Module.register` runs in `AppComposition.bootstrapFeatures()`. The first mapper to return non-`nil` wins. If two mappers could plausibly match the same URL, register the more specific feature first.
 
 ## Checklist: wiring up a new feature
 
 - [ ] Create the SPM package under `Packages/Features/<FeatureName>`, depending on `Navigation` + `NetworkService` (via `SharedLibraries`) — nothing else.
-- [ ] Define `<FeatureName>Route: Route` with your screens; keep it `public` (the App needs it).
+- [ ] Define `<FeatureName>Route: Route` with your screens; keep it `public` (the App, and any feature that navigates into you, need it).
 - [ ] Build your views, reading `NavigationCoordinator` via `@EnvironmentObject`.
-- [ ] `<FeatureName>Module.register(network:)` should only wire the feature's own DI (repositories/use cases/view models) — never touch `RouteRegistry`/`DeepLinkRouter`.
-- [ ] *(Only if other features or deep links must reach in)* Add `public <FeatureName>Destination: NavigationDestination` to `App/Destinations/` — not to the feature's own package.
-- [ ] *(Only if the above)* Add a `<FeatureName>DeepLinkMapper: DeepLinkMapper` to `App/Routing/`, and register both it and the destination from `App/AppComposition.swift`.
-- [ ] *(For a feature that needs to navigate into another feature)* Give `<FeatureName>Module.register` an extra parameter for the closure it needs (named for the feature's own concern, e.g. `crossFeatureActions:`), thread it down to wherever the trigger lives, and have `AppComposition` supply the real implementation using `MainCoordinator`.
+- [ ] `<FeatureName>Module.register(network:)` wires the feature's own DI (repositories/use cases/view models) **and** registers its own `DeepLinkMapper` with `DeepLinkRouter.shared` — both are the feature's own responsibility now.
+- [ ] *(Only if a deep link should reach in)* Add a `<FeatureName>DeepLinkMapper: DeepLinkMapper` inside the feature's own package (`Presentation/Routing/`), returning `AnyRoute(<FeatureName>Route.someCase(...))` directly from the mapped `URL`.
+- [ ] *(For a feature that needs to navigate into another feature)* Declare a `<FeatureName>CrossFeatureDelegate: AnyObject` protocol in the feature's own package (`Presentation/CrossFeature/`), named for what it needs (e.g. `onSecondaryAction`); give `<FeatureName>Module.register` an extra `crossFeatureDelegate:` parameter, hold it `weak` all the way down to the view model, and have `AppComposition` pass `appCoordinator` (which conforms to it) at registration.
 - [ ] Host the feature's root under a `NavigationHost` somewhere (a tab, a nav-linked entry point), with its own `NavigationCoordinator`.
 
-No feature package ever depends on another feature's package, or on `NavigationDestination`/`RouteRegistry`/`DeepLinkRouter` — those are exclusively `App/`'s concern.
+No feature package ever depends on another feature's package. Only the App target — via `@_exported import` in
+`App/ModularNavigationExampleApp.swift` — sees every feature's `Route` type at once, which is what lets
+`AppCoordinator` translate one feature's cross-feature request into another feature's route.
 
 ## Gotchas & design notes
 
-- **`RouteRegistry.shared` and `DeepLinkRouter.shared` are global singletons**, populated once from
-  `AppComposition.bootstrapFeatures()` in the app's `init()`. Calling either
-  `resolve` before that has run will hit the miss path below. For unit tests, prefer creating fresh
-  `RouteRegistry()`/`DeepLinkRouter(mappers: [])` instances rather than touching `.shared`, so tests don't leak
-  registrations into each other.
-- **Both `RouteRegistry.resolve(_:)` and `DeepLinkRouter.resolve(url:)` trap in Debug/test builds and return `nil`
-  in Release** when nothing matches (`assertionFailure` under the hood, in both). This is intentional: Debug, CI,
-  and test runs should catch a forgotten registration or a mistyped deep-link URL immediately and loudly; a shipped
-  Release build degrades to a no-op instead of crashing for a user. One consequence: **don't** write a unit test
-  that calls either `resolve` with an unregistered value under a normal `swift test` run — it will abort the whole
-  test process, not fail one test. If you need to verify the non-trapping Release behavior specifically, run
-  `swift test -c release`.
+- **`DeepLinkRouter.shared` is a global singleton**, populated once per feature from inside that feature's own
+  `Module.register(network:...)`, all called from `AppComposition.bootstrapFeatures()` in the app's `init()`.
+  Calling `resolve` before that has run will hit the miss path below. For unit tests, prefer creating a fresh
+  `DeepLinkRouter(mappers: [])` instance rather than touching `.shared`, so tests don't leak registrations into
+  each other.
+- **`DeepLinkRouter.resolve(url:)` traps in Debug/test builds and returns `nil` in Release** when nothing matches
+  (`assertionFailure` under the hood). This is intentional: Debug, CI, and test runs should catch a mistyped
+  deep-link URL or a feature that forgot to register its mapper immediately and loudly; a shipped Release build
+  degrades to a no-op instead of crashing for a user. One consequence: **don't** write a unit test that calls
+  `resolve` with an unregistered URL under a normal `swift test` run — it will abort the whole test process, not
+  fail one test. If you need to verify the non-trapping Release behavior specifically, run `swift test -c release`.
 - **`sheetDetents` is a real `Route` protocol requirement**, not just a protocol-extension default. That's
   deliberate — code that only knows `route.sheetDetents` through a generic `R: Route` constraint (which is exactly
   what `AnyRoute.init` and `presentSheet`/`presentFullScreen` do) needs it in the requirement list for a per-route
@@ -296,11 +295,13 @@ No feature package ever depends on another feature's package, or on `NavigationD
 - **`fullScreenCover` is unavailable on macOS.** `NavigationHost`/`PresentedNavigationHost` guard that one modifier
   behind `#if os(iOS)` so the package still compiles for macOS — this exists purely so `swift test` can run on the
   host Mac without booting an iOS simulator. It has no effect on iOS behavior.
-- **`FeatureModule` exists in `Navigation` but isn't currently adopted.** Features expose a plain `register(network:)`
-  static method (`UsersModule`, `ColorsModule`) for their own DI only — it no longer touches `RouteRegistry`/
-  `DeepLinkRouter` at all. `AppComposition.bootstrapFeatures()` calls each feature's `register`, then separately
-  registers that feature's destination/mapper itself. If you want a uniform registration hook across features,
-  conform to `FeatureModule`; nothing currently depends on that happening.
+- **`FeatureModule`, `RouteRegistry`, and `NavigationDestination` still exist in `Navigation` but aren't used by
+  this app.** They're an earlier design — destination enums translated through a central registry — that
+  cross-feature and deep-link navigation have since moved away from in favor of using each feature's `Route` type
+  directly. `UsersModule`/`ColorsModule` expose a plain `register(network:...)` static method that wires the
+  feature's own DI *and* registers its own `DeepLinkMapper` with `DeepLinkRouter.shared` in that same call. If you
+  want a uniform registration hook across features, `FeatureModule` is still there to conform to; nothing currently
+  depends on that happening.
 
 ## Testing
 
@@ -323,7 +324,7 @@ currently wired for the test action:
 xcodebuild test -scheme FeatureY -destination 'platform=iOS Simulator,name=<simulator name>'
 ```
 
-`App/Destinations/`, `App/Routing/`, and `App/AppComposition.swift` have no automated test coverage — there is
+`App/AppComposition.swift` and `Coordinator/AppCoordinator.swift` have no automated test coverage — there is
 no Xcode unit test target for the `App` target itself. Verify deep links manually against a booted simulator:
 
 ```

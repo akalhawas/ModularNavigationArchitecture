@@ -11,7 +11,7 @@ import Navigation
 struct UsersView: View {
 
     @StateObject private var viewModel: UsersViewModel
-    @EnvironmentObject var coordinator: NavigationCoordinator
+    @EnvironmentObject var coordinator: NavigationRouter
     
     init(viewModel: UsersViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)

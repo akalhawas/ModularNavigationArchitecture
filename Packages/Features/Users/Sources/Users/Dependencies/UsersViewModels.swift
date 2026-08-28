@@ -28,4 +28,9 @@ final class UsersViewModels {
             onDetailAction: onDetailAction
         )
     }
+
+    @MainActor
+    func makeLatestUsersViewModel(limit: Int = 10) -> LatestUsersViewModel {
+        LatestUsersViewModel(fetchUsersUseCase: useCases.fetchUsersUseCase, limit: limit)
+    }
 }

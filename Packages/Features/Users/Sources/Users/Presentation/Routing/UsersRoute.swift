@@ -10,13 +10,13 @@ import Navigation
 
 public enum UsersRoute: Route {
     case usersList
-    case userDetail(id: Int, onDetailAction: ActionCallback<Void>? = nil)
+    case userDetail(id: Int, completetion: ActionCallback<Void>? = nil)
 
-    public static func userDetail(id: Int, onDetailAction: @escaping () -> Void) -> UsersRoute {
-        .userDetail(id: id, onDetailAction: ActionCallback(onDetailAction))
-    }
+//    public static func userDetail(id: Int, onDetailAction: @escaping () -> Void) -> UsersRoute {
+//        .userDetail(id: id, onDetailAction: ActionCallback(onDetailAction))
+//    }
 
-    public func makeView(coordinator: NavigationCoordinator) -> some View {
+    public func makeView(coordinator: NavigationRouter) -> some View {
         switch self {
         case .usersList:
             UsersView(viewModel: UsersModule.viewModels().makeUsersViewModel())

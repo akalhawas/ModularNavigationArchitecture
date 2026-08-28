@@ -1,3 +1,4 @@
+import SwiftUI
 import NetworkService
 import Navigation
 import Combine
@@ -10,26 +11,29 @@ import Combine
 public enum UsersModule {
 
     static var viewModels: () -> UsersViewModels = {
-        fatalError("UsersModule has not been registered.")
-    }
-    
-    static var usecases: () -> UsersUseCases = {
-        fatalError("UsersModule has not been registered.")
+        fatalError("UsersModule not registered — call UsersModule.register(network:) at app launch")
     }
 
     public static func register(network: NetworkService) {
         let dependencies = UsersDependencies(network: network)
         viewModels = { dependencies.viewModels }
-        
-        usecases = { dependencies.useCases }
         registerRouting()
     }
     
     private static func registerRouting() {
         DeepLinkRouter.shared.register(UsersDeepLinkMapper())
     }
-    
-    public static func checkSubscribe(id: Int) -> AnyPublisher<UserListResponse, Error> {
-        usecases().fetchUsersUseCase.execute(page: id).eraseToAnyPublisher()
+}
+
+// MARK: Shared Views
+extension UsersModule {
+    @ViewBuilder
+    public static func headerHomeView(items: Int) -> some View {
+        LatestUsersView(viewModel: viewModels().makeLatestUsersViewModel(limit: items))
+    }
+
+    @ViewBuilder
+    public static func makeServicesCard() -> some View {
+        UsersServiceCard()
     }
 }

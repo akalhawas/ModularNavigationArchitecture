@@ -1,17 +1,17 @@
 //
-//  LatestColorsView.swift
-//  Colors
+//  LatestUsersView.swift
+//  Users
 //
 
 import SwiftUI
 import Navigation
 
-struct LatestColorsView: View {
+struct LatestUsersView: View {
 
-    @StateObject private var viewModel: LatestColorsViewModel
+    @StateObject private var viewModel: LatestUsersViewModel
     @EnvironmentObject var coordinator: NavigationRouter
 
-    init(viewModel: LatestColorsViewModel) {
+    init(viewModel: LatestUsersViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
@@ -21,19 +21,19 @@ struct LatestColorsView: View {
             content
         }
         .task {
-            if viewModel.colors.isEmpty {
-                viewModel.fetchLatestColors()
+            if viewModel.users.isEmpty {
+                viewModel.fetchLatestUsers()
             }
         }
     }
 
     private var header: some View {
         HStack {
-            Text("Latest Colors")
+            Text("Latest Users")
                 .font(.title2.bold())
             Spacer()
             Button {
-                coordinator.navigate(to: ColorsRoute.colorsList)
+                coordinator.navigate(to: UsersRoute.usersList)
             } label: {
                 HStack(spacing: 4) {
                     Text("See All")
@@ -54,24 +54,24 @@ struct LatestColorsView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 Button("Retry") {
-                    viewModel.fetchLatestColors()
+                    viewModel.fetchLatestUsers()
                 }
                 .font(.footnote)
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal)
-        } else if viewModel.colors.isEmpty {
+        } else if viewModel.users.isEmpty {
             ProgressView()
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal)
         } else {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
-                    ForEach(viewModel.colors) { color in
+                    ForEach(viewModel.users) { user in
                         Button {
-                            coordinator.presentSheet(ColorsRoute.colorDetail(id: color.id))
+                            coordinator.navigate(to: UsersRoute.userDetail(id: user.id))
                         } label: {
-                            LatestColorCard(color: color)
+                            LatestUserCard(user: user)
                         }
                         .buttonStyle(.plain)
                     }
@@ -82,23 +82,32 @@ struct LatestColorsView: View {
     }
 }
 
-private struct LatestColorCard: View {
+private struct LatestUserCard: View {
 
-    let color: AppColor
+    let user: User
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(hex: color.color))
-                .frame(width: 116, height: 80)
+            AsyncImage(url: URL(string: user.avatar)) { phase in
+                if let image = phase.image {
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    Circle().fill(Color.secondary.opacity(0.2))
+                }
+            }
+            .frame(width: 60, height: 60)
+            .clipShape(Circle())
 
-            Text(color.name.capitalized)
+            Text("\(user.firstName) \(user.lastName)")
                 .font(.subheadline.bold())
                 .lineLimit(1)
 
-            Text("\(color.year)")
+            Text(user.email)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .lineLimit(1)
         }
         .padding(10)
         .frame(width: 140, alignment: .leading)
@@ -109,9 +118,9 @@ private struct LatestColorCard: View {
 }
 
 #Preview {
-    LatestColorsView(
-        viewModel: LatestColorsViewModel(
-            fetchColorsUseCase: FetchColorsUseCaseImp(repository: ColorRepositoryMock()),
+    LatestUsersView(
+        viewModel: LatestUsersViewModel(
+            fetchUsersUseCase: FetchUsersUseCaseImp(repository: UserRepositoryMock()),
             limit: 10
         )
     )

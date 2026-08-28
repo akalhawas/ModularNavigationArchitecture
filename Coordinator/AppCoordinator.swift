@@ -13,10 +13,10 @@ final class AppCoordinator: ObservableObject {
 
     @Published var selectedTab: TabBar = .home
 
-    let homeCoordinator = NavigationCoordinator()
-    let servicesCoordinator = NavigationCoordinator()
+    let homeCoordinator = NavigationRouter()
+    let servicesCoordinator = NavigationRouter()
 
-    private var allCoordinators: [NavigationCoordinator] {
+    private var allCoordinators: [NavigationRouter] {
         [homeCoordinator, servicesCoordinator]
     }
 
@@ -39,9 +39,9 @@ extension AppCoordinator {
     }
 }
 
-// MARK: Colors Cross-feature
+// MARK: In App Colors Cross-feature
 extension AppCoordinator: ColorsCrossFeatureDelegate {
-    func onPrimaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {
-        coordinator.navigate(to: UsersRoute.userDetail(id: id, onDetailAction: onReturn), strategy: .push)
+    func onPrimaryAction(coordinator: NavigationRouter, id: Int) {
+        coordinator.navigate(to: UsersRoute.userDetail(id: id), strategy: .push)
     }
 }

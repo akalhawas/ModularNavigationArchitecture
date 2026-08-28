@@ -11,7 +11,7 @@ import Navigation
 struct ColorsView: View {
 
     @StateObject private var viewModel: ColorsViewModel
-    @EnvironmentObject var coordinator: NavigationCoordinator
+    @EnvironmentObject var coordinator: NavigationRouter
 
     init(viewModel: ColorsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -27,17 +27,25 @@ struct ColorsView: View {
                     }
                 }
 
-            Button {
-                viewModel.crossFeatureDelegate?.onPrimaryAction(coordinator: coordinator, id: 2) {
-                    viewModel.didReturnFromTertiaryAction()
-                }
-            } label: {
-                Text("Users")
+            if let crossFeatureDelegate = viewModel.crossFeatureDelegate {
+                Button {
+                    crossFeatureDelegate.onPrimaryAction(coordinator: coordinator, id: 2)
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "person.2.fill")
+                        Text("View Users")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.bold())
+                    }
                     .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.gray)
                     .foregroundColor(.white)
-                    .cornerRadius(8)
+                    .background(Color.blue)
+                    .cornerRadius(14)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 8)
             }
         }
     }
@@ -54,8 +62,7 @@ struct ColorsView: View {
         } else {
             List(viewModel.colors) { color in
                 Button {
-//                    coordinator.navigate(to: ColorsRoute.colorDetail(id: color.id))
-                    coordinator.presentSheet(ColorsRoute.colorDetail(id: color.id))
+                    coordinator.navigate(to: ColorsRoute.colorDetail(id: color.id))
                 } label: {
                     ColorRow(color: color)
                 }
@@ -107,17 +114,12 @@ extension Color {
     }
 }
 
-private final class PreviewColorsCrossFeatureDelegate: ColorsCrossFeatureDelegate {
-    func onPrimaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {}
-    func onSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {}
-}
-
 #Preview {
     NavigationStack {
         ColorsView(
             viewModel: ColorsViewModel(
                 fetchColorsUseCase: FetchColorsUseCaseImp(repository: ColorRepositoryMock()),
-                crossFeatureDelegate: PreviewColorsCrossFeatureDelegate()
+                crossFeatureDelegate: nil
             )
         )
     }

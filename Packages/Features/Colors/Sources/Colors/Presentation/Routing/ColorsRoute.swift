@@ -12,7 +12,7 @@ public enum ColorsRoute: Route {
     case colorsList
     case colorDetail(id: Int)
 
-    public func makeView(coordinator: NavigationCoordinator) -> some View {
+    public func makeView(coordinator: NavigationRouter) -> some View {
         switch self {
         case .colorsList:
             ColorsView(viewModel: ColorsModule.viewModels().makeColorsViewModel())

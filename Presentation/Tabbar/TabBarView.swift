@@ -15,7 +15,7 @@ enum TabBar: String, CaseIterable, Identifiable {
 
 struct TabBarView: View {
 
-    @ObservedObject var appCoordinator: AppCoordinator
+    @StateObject var appCoordinator: AppCoordinator = AppCoordinator()
 
     var body: some View {
         TabView(selection: $appCoordinator.selectedTab) {

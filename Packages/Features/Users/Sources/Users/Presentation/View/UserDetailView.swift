@@ -11,7 +11,7 @@ import Navigation
 struct UserDetailView: View {
 
     @StateObject private var viewModel: UserDetailViewModel
-    @EnvironmentObject var coordinator: NavigationCoordinator
+    @EnvironmentObject var coordinator: NavigationRouter
     
     init(viewModel: UserDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -32,13 +32,18 @@ struct UserDetailView: View {
                     viewModel.notifyDetailAction()
                     coordinator.pop()
                 } label: {
-                    Text("Back")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.gray)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                    HStack(spacing: 8) {
+                        Image(systemName: "chevron.left")
+                        Text("Back")
+                            .fontWeight(.semibold)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(14)
                 }
+                .padding(.horizontal)
             }
         }
     }

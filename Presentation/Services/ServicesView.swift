@@ -7,35 +7,17 @@
 
 import SwiftUI
 import Navigation
+import Users
+import Colors
 
 struct ServicesView: View {
-    
-    @EnvironmentObject var coordinator: NavigationCoordinator
-    
+
+    @EnvironmentObject var coordinator: NavigationRouter
+
     var body: some View {
         VStack {
-            Button {
-                coordinator.navigate(to: UsersRoute.usersList)
-            } label: {
-                Text("Users")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-
-            Button {
-                coordinator.navigate(to: ColorsRoute.colorsList)
-            } label: {
-                Text("Colors")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-
+            UsersModule.makeServicesCard()
+            ColorsModule.makeServicesCard()
             Spacer()
         }
         .navigationTitle("Services")

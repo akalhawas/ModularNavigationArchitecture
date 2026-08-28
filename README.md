@@ -27,15 +27,15 @@ Three things this package is designed to make easy, and which this document cove
 |---|---|---|
 | `Route` | Each feature's own package | Protocol your feature's screens conform to. Knows how to build its own view. Declared `public`, so both the App and any feature that needs to navigate into you can use it directly. |
 | `AnyRoute` | `Navigation` | Type-erased `Route`, so a stack can hold routes from different `Route` types. |
-| `NavigationCoordinator` | `Navigation` | Owns one navigation stack's state: push/pop/present. One per independent flow. |
-| `NavigationHost` / `PresentedNavigationHost` | `Navigation` | SwiftUI wrappers that turn a `NavigationCoordinator` into an actual `NavigationStack`. |
+| `NavigationRouter` | `Navigation` | Owns one navigation stack's state: push/pop/present. One per independent flow. |
+| `NavigationHost` / `PresentedNavigationHost` | `Navigation` | SwiftUI wrappers that turn a `NavigationRouter` into an actual `NavigationStack`. |
 | `<Feature>CrossFeatureDelegate` | The *calling* feature's own package | A `weak`, class-bound protocol the feature declares for the one seam it needs to reach outside itself, named for its own concern (e.g. `onPrimaryAction`). Implemented by the App's `AppCoordinator`. |
 | `DeepLinkMapper` / `DeepLinkRouter` | Each `DeepLinkMapper` conformance lives inside the feature's own package; `DeepLinkRouter` itself lives in `Navigation` | Turns a `URL` into an `AnyRoute` directly. `DeepLinkRouter.shared` is a singleton; each feature registers its own mapper into it from inside its own `Module.register(...)`, the same call that wires its DI. |
-| `AppCoordinator` | App target, `Coordinator/AppCoordinator.swift` | Owns the app's top-level `NavigationCoordinator`s and selected tab, conforms to every feature's cross-feature delegate protocol, and turns an already-resolved deep-link `AnyRoute` into a navigation. |
+| `AppCoordinator` | App target, `Coordinator/AppCoordinator.swift` | Owns the app's top-level `NavigationRouter`s and selected tab, conforms to every feature's cross-feature delegate protocol, and turns an already-resolved deep-link `AnyRoute` into a navigation. |
 
 The flows in one line each:
 
-- **Internal:** `View` → `coordinator.navigate(to: SomeRoute.case)` → pushed onto `NavigationCoordinator.routes` → rendered by `NavigationHost`'s `NavigationStack`.
+- **Internal:** `View` → `coordinator.navigate(to: SomeRoute.case)` → pushed onto `NavigationRouter.routes` → rendered by `NavigationHost`'s `NavigationStack`.
 - **Cross-feature (in-app):** the feature calls a `weak` delegate protocol it defined itself and was handed at registration (e.g. `viewModel.crossFeatureDelegate?.onPrimaryAction(...)`) → the App's `AppCoordinator` conforms to that protocol and, inside its conformance, builds the *other* feature's `Route` directly → `coordinator.navigate(to:)`. The calling feature never imports the other feature's package or route type — only the App does.
 - **Deep link (from the OS):** `URL` → `DeepLinkRouter.shared.resolve(url:)` (tries each registered `DeepLinkMapper` in order) → the mapper builds an `AnyRoute` from its own feature's `Route` type directly → `coordinator.navigate(to:)`.
 
@@ -53,7 +53,7 @@ public enum FeatureXRoute: Route {
     case main
     case detail(id: String)
 
-    public func makeView(coordinator: NavigationCoordinator) -> some View {
+    public func makeView(coordinator: NavigationRouter) -> some View {
         switch self {
         case .main:
             FeatureXListView().environmentObject(coordinator)
@@ -69,7 +69,7 @@ below):
 
 ```swift
 struct FeatureXListView: View {
-    @EnvironmentObject var coordinator: NavigationCoordinator
+    @EnvironmentObject var coordinator: NavigationRouter
 
     var body: some View {
         Button("Open detail") {
@@ -148,7 +148,7 @@ a feature declares a small, `weak`, class-bound delegate protocol for the one se
 import Navigation
 
 public protocol FeatureXCrossFeatureDelegate: AnyObject {
-    func onSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void)
+    func onSecondaryAction(coordinator: NavigationRouter, id: Int, onReturn: @escaping () -> Void)
 }
 ```
 
@@ -159,7 +159,7 @@ Name it for what `FeatureX` needs — never for the feature it happens to lead t
 ```swift
 // Coordinator/AppCoordinator.swift
 extension AppCoordinator: FeatureXCrossFeatureDelegate {
-    func onSecondaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {
+    func onSecondaryAction(coordinator: NavigationRouter, id: Int, onReturn: @escaping () -> Void) {
         coordinator.navigate(to: FeatureYRoute.details(id: id, onDetailAction: onReturn), strategy: .push)
     }
 }
@@ -256,11 +256,11 @@ Mappers are tried **in the order they were registered** — the order each featu
 
 - [ ] Create the SPM package under `Packages/Features/<FeatureName>`, depending on `Navigation` + `NetworkService` (via `SharedLibraries`) — nothing else.
 - [ ] Define `<FeatureName>Route: Route` with your screens; keep it `public` (the App, and any feature that navigates into you, need it).
-- [ ] Build your views, reading `NavigationCoordinator` via `@EnvironmentObject`.
+- [ ] Build your views, reading `NavigationRouter` via `@EnvironmentObject`.
 - [ ] `<FeatureName>Module.register(network:)` wires the feature's own DI (repositories/use cases/view models) **and** registers its own `DeepLinkMapper` with `DeepLinkRouter.shared` — both are the feature's own responsibility now.
 - [ ] *(Only if a deep link should reach in)* Add a `<FeatureName>DeepLinkMapper: DeepLinkMapper` inside the feature's own package (`Presentation/Routing/`), returning `AnyRoute(<FeatureName>Route.someCase(...))` directly from the mapped `URL`.
 - [ ] *(For a feature that needs to navigate into another feature)* Declare a `<FeatureName>CrossFeatureDelegate: AnyObject` protocol in the feature's own package (`Presentation/CrossFeature/`), named for what it needs (e.g. `onSecondaryAction`); give `<FeatureName>Module.register` an extra `crossFeatureDelegate:` parameter, hold it `weak` all the way down to the view model, and have `AppComposition` pass `appCoordinator` (which conforms to it) at registration.
-- [ ] Host the feature's root under a `NavigationHost` somewhere (a tab, a nav-linked entry point), with its own `NavigationCoordinator`.
+- [ ] Host the feature's root under a `NavigationHost` somewhere (a tab, a nav-linked entry point), with its own `NavigationRouter`.
 
 No feature package ever depends on another feature's package. Only the App target — via `@_exported import` in
 `App/ModularNavigationExampleApp.swift` — sees every feature's `Route` type at once, which is what lets
@@ -284,7 +284,7 @@ No feature package ever depends on another feature's package. Only the App targe
   what `AnyRoute.init` and `presentSheet`/`presentFullScreen` do) needs it in the requirement list for a per-route
   override to actually take effect. If it were extension-only, a route's custom `sheetDetents` would silently be
   ignored and every route would present at `.large`. Don't move it back.
-- **`PresentedNavigationHost` (used for sheets/full-screen) always creates its own fresh `NavigationCoordinator`.**
+- **`PresentedNavigationHost` (used for sheets/full-screen) always creates its own fresh `NavigationRouter`.**
   There's no built-in way for a route pushed inside a presented flow to reach back into the presenting stack. If a
   presented flow needs to end by navigating the *parent* somewhere, model that explicitly (dismiss, then have the
   parent act on a result) rather than assuming the coordinator can call upward.
@@ -313,7 +313,7 @@ swift test --filter NavigationTests
 ```
 
 Runs on macOS directly — no simulator needed, finishes in well under a second. Coverage lives in
-`Tests/NavigationTests`: `NavigationCoordinatorTests`, `RouteRegistryTests`, `AnyRouteTests`, `DeepLinkRouterTests`,
+`Tests/NavigationTests`: `NavigationRouterTests`, `RouteRegistryTests`, `AnyRouteTests`, `DeepLinkRouterTests`,
 and `URLQueryItemTests`.
 
 For this repo's own feature-level coverage — e.g. `ColorsViewModelTests` or `UsersViewModelTests`, which test the

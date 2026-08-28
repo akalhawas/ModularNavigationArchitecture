@@ -35,15 +35,8 @@ final class ColorsViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func didReturnFromSecondaryAction() {
+    func didReturnFromAction() {
+        print("DEBUG: didReturnFromAction")
         colors = colors.dropLast()
-        print("DEBUG: didReturnFromSecondaryAction")
-    }
-
-    /// Same idea as `didReturnFromSecondaryAction()`, for the delegate-driven
-    /// seam instead of the closure-driven one.
-    func didReturnFromTertiaryAction() {
-        colors = colors.dropLast()
-        print("DEBUG: didReturnFromTertiaryAction")
     }
 }

@@ -30,9 +30,17 @@ public enum ColorsModule {
     private static func registerRouting() {
         DeepLinkRouter.shared.register(ColorsDeepLinkMapper())
     }
-    
+}
+
+// MARK: Shared Views
+extension ColorsModule {
     @ViewBuilder
     public static func headerHomeView(items: Int) -> some View {
         LatestColorsView(viewModel: viewModels().makeLatestColorsViewModel(limit: items))
+    }
+
+    @ViewBuilder
+    public static func makeServicesCard() -> some View {
+        ColorsServiceCard()
     }
 }

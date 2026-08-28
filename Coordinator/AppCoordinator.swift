@@ -13,11 +13,11 @@ final class AppCoordinator: ObservableObject {
 
     @Published var selectedTab: TabBar = .home
 
-    let homeCoordinator = NavigationRouter()
-    let servicesCoordinator = NavigationRouter()
+    let homeRouter = NavigationRouter()
+    let servicesRouter = NavigationRouter()
 
-    private var allCoordinators: [NavigationRouter] {
-        [homeCoordinator, servicesCoordinator]
+    private var allRouters: [NavigationRouter] {
+        [homeRouter, servicesRouter]
     }
 
     init() { }
@@ -29,19 +29,19 @@ extension AppCoordinator {
     func handleDeepLinkNavigation(to route: AnyRoute) {
 
         /// remove all presentation
-        allCoordinators.forEach { coordinator in
-            coordinator.dismissSheet()
-            coordinator.dismissFullScreen()
+        allRouters.forEach { router in
+            router.dismissSheet()
+            router.dismissFullScreen()
         }
 
         selectedTab = .services
-        servicesCoordinator.navigate(to: route, strategy: .resetStack)
+        servicesRouter.navigate(to: route, strategy: .resetStack)
     }
 }
 
 // MARK: In App Colors Cross-feature
 extension AppCoordinator: ColorsCrossFeatureDelegate {
-    func onPrimaryAction(coordinator: NavigationRouter, id: Int) {
-        coordinator.navigate(to: UsersRoute.userDetail(id: id), strategy: .push)
+    func onPrimaryAction(router: NavigationRouter, id: Int) {
+        router.navigate(to: UsersRoute.userDetail(id: id), strategy: .push)
     }
 }

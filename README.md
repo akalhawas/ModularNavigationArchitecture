@@ -31,15 +31,15 @@ Three things this package is designed to make easy, and which this document cove
 | `NavigationHost` / `PresentedNavigationHost` | `Navigation` | SwiftUI wrappers that turn a `NavigationRouter` into an actual `NavigationStack`. |
 | `<Feature>CrossFeatureDelegate` | The *calling* feature's own package | A `weak`, class-bound protocol the feature declares for the one seam it needs to reach outside itself, named for its own concern (e.g. `onPrimaryAction`). Implemented by the App's `AppCoordinator`. |
 | `DeepLinkMapper` / `DeepLinkRouter` | Each `DeepLinkMapper` conformance lives inside the feature's own package; `DeepLinkRouter` itself lives in `Navigation` | Turns a `URL` into an `AnyRoute` directly. `DeepLinkRouter.shared` is a singleton; each feature registers its own mapper into it from inside its own `Module.register(...)`, the same call that wires its DI. |
-| `AppCoordinator` | App target, `Coordinator/AppCoordinator.swift` | Owns the app's top-level `NavigationRouter`s and selected tab, conforms to every feature's cross-feature delegate protocol, and turns an already-resolved deep-link `AnyRoute` into a navigation. |
+| `AppCoordinator` | App target, `Router/AppCoordinator.swift` | Owns the app's top-level `NavigationRouter`s and selected tab, conforms to every feature's cross-feature delegate protocol, and turns an already-resolved deep-link `AnyRoute` into a navigation. |
 
 The flows in one line each:
 
-- **Internal:** `View` → `coordinator.navigate(to: SomeRoute.case)` → pushed onto `NavigationRouter.routes` → rendered by `NavigationHost`'s `NavigationStack`.
-- **Cross-feature (in-app):** the feature calls a `weak` delegate protocol it defined itself and was handed at registration (e.g. `viewModel.crossFeatureDelegate?.onPrimaryAction(...)`) → the App's `AppCoordinator` conforms to that protocol and, inside its conformance, builds the *other* feature's `Route` directly → `coordinator.navigate(to:)`. The calling feature never imports the other feature's package or route type — only the App does.
-- **Deep link (from the OS):** `URL` → `DeepLinkRouter.shared.resolve(url:)` (tries each registered `DeepLinkMapper` in order) → the mapper builds an `AnyRoute` from its own feature's `Route` type directly → `coordinator.navigate(to:)`.
+- **Internal:** `View` → `router.navigate(to: SomeRoute.case)` → pushed onto `NavigationRouter.routes` → rendered by `NavigationHost`'s `NavigationStack`.
+- **Cross-feature (in-app):** the feature calls a `weak` delegate protocol it defined itself and was handed at registration (e.g. `viewModel.crossFeatureDelegate?.onPrimaryAction(...)`) → the App's `AppCoordinator` conforms to that protocol and, inside its conformance, builds the *other* feature's `Route` directly → `router.navigate(to:)`. The calling feature never imports the other feature's package or route type — only the App does.
+- **Deep link (from the OS):** `URL` → `DeepLinkRouter.shared.resolve(url:)` (tries each registered `DeepLinkMapper` in order) → the mapper builds an `AnyRoute` from its own feature's `Route` type directly → `router.navigate(to:)`.
 
-Both flows converge on the same final call, `coordinator.navigate(to:)`, but there's no shared App-owned translation table in between anymore — each feature's own `Route` type is public and used directly, either by that feature's own `DeepLinkMapper` or by `AppCoordinator`'s delegate conformance. A feature's only involvement in cross-feature navigation is exposing a delegate protocol, in its own vocabulary, that the App conforms to — the feature never imports another feature's package.
+Both flows converge on the same final call, `router.navigate(to:)`, but there's no shared App-owned translation table in between anymore — each feature's own `Route` type is public and used directly, either by that feature's own `DeepLinkMapper` or by `AppCoordinator`'s delegate conformance. A feature's only involvement in cross-feature navigation is exposing a delegate protocol, in its own vocabulary, that the App conforms to — the feature never imports another feature's package.
 
 ## 1. Internal navigation (within a single feature)
 
@@ -53,27 +53,27 @@ public enum FeatureXRoute: Route {
     case main
     case detail(id: String)
 
-    public func makeView(coordinator: NavigationRouter) -> some View {
+    public func makeView(router: NavigationRouter) -> some View {
         switch self {
         case .main:
-            FeatureXListView().environmentObject(coordinator)
+            FeatureXListView().environmentObject(router)
         case .detail(let id):
-            FeatureXDetailView(id: id).environmentObject(coordinator)
+            FeatureXDetailView(id: id).environmentObject(router)
         }
     }
 }
 ```
 
-Every view in the flow gets the coordinator via `@EnvironmentObject` (set up once by whatever hosts the stack — see
+Every view in the flow gets the router via `@EnvironmentObject` (set up once by whatever hosts the stack — see
 below):
 
 ```swift
 struct FeatureXListView: View {
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
 
     var body: some View {
         Button("Open detail") {
-            coordinator.navigate(to: FeatureXRoute.detail(id: "42"))
+            router.navigate(to: FeatureXRoute.detail(id: "42"))
         }
     }
 }
@@ -92,21 +92,21 @@ struct FeatureXListView: View {
 ### Popping
 
 ```swift
-coordinator.pop()                                   // remove the top route
-coordinator.pop(count: 2)                            // remove the top N (clamped to stack size)
-coordinator.popTo { $0.matches(FeatureXRoute.main) }  // trim back to the last route matching a predicate
-coordinator.popToRoot()                               // clear the whole stack
+router.pop()                                   // remove the top route
+router.pop(count: 2)                            // remove the top N (clamped to stack size)
+router.popTo { $0.matches(FeatureXRoute.main) }  // trim back to the last route matching a predicate
+router.popToRoot()                               // clear the whole stack
 ```
 
 ### Presenting modally
 
 ```swift
-coordinator.presentSheet(FeatureXRoute.detail(id: "42"))              // uses the route's own `sheetDetents`
-coordinator.presentSheet(FeatureXRoute.detail(id: "42"), detents: [.medium]) // explicit override
-coordinator.presentFullScreen(FeatureXRoute.main)
+router.presentSheet(FeatureXRoute.detail(id: "42"))              // uses the route's own `sheetDetents`
+router.presentSheet(FeatureXRoute.detail(id: "42"), detents: [.medium]) // explicit override
+router.presentFullScreen(FeatureXRoute.main)
 
-coordinator.dismissSheet()
-coordinator.dismissFullScreen()
+router.dismissSheet()
+router.dismissFullScreen()
 ```
 
 A route can declare its own default sheet detents (used whenever `presentSheet` is called *without* an explicit
@@ -127,8 +127,8 @@ You only need this once per *independent* navigation flow — an app root, a tab
 Individual feature screens never construct this themselves.
 
 ```swift
-NavigationHost(coordinator: someCoordinator) {
-    FeatureXListView().environmentObject(someCoordinator)
+NavigationHost(router: someRouter) {
+    FeatureXListView().environmentObject(someRouter)
 }
 ```
 
@@ -148,19 +148,19 @@ a feature declares a small, `weak`, class-bound delegate protocol for the one se
 import Navigation
 
 public protocol FeatureXCrossFeatureDelegate: AnyObject {
-    func onSecondaryAction(coordinator: NavigationRouter, id: Int, onReturn: @escaping () -> Void)
+    func onSecondaryAction(router: NavigationRouter, id: Int, onReturn: @escaping () -> Void)
 }
 ```
 
-Name it for what `FeatureX` needs — never for the feature it happens to lead to. `FeatureXModule.register(network:crossFeatureDelegate:)` takes this protocol as an optional parameter and threads it down to wherever the button lives (through `FeatureXDependencies` → `FeatureXViewModels` → the view model), holding it `weak` at every step — the delegate is normally the App's coordinator, and a strong reference back to it would leak. The button calls `viewModel.crossFeatureDelegate?.onSecondaryAction(coordinator, someId) { /* ... */ }` and does nothing else.
+Name it for what `FeatureX` needs — never for the feature it happens to lead to. `FeatureXModule.register(network:crossFeatureDelegate:)` takes this protocol as an optional parameter and threads it down to wherever the button lives (through `FeatureXDependencies` → `FeatureXViewModels` → the view model), holding it `weak` at every step — the delegate is normally the App's router, and a strong reference back to it would leak. The button calls `viewModel.crossFeatureDelegate?.onSecondaryAction(router, someId) { /* ... */ }` and does nothing else.
 
 ### Step 2 — The App conforms to the delegate and builds the target feature's route directly
 
 ```swift
-// Coordinator/AppCoordinator.swift
+// Router/AppCoordinator.swift
 extension AppCoordinator: FeatureXCrossFeatureDelegate {
-    func onSecondaryAction(coordinator: NavigationRouter, id: Int, onReturn: @escaping () -> Void) {
-        coordinator.navigate(to: FeatureYRoute.details(id: id, onDetailAction: onReturn), strategy: .push)
+    func onSecondaryAction(router: NavigationRouter, id: Int, onReturn: @escaping () -> Void) {
+        router.navigate(to: FeatureYRoute.details(id: id, onDetailAction: onReturn), strategy: .push)
     }
 }
 ```
@@ -235,15 +235,15 @@ private static func registerRouting() {
 ```
 
 ```swift
-// Coordinator/AppCoordinator.swift
+// Router/AppCoordinator.swift
 func handleDeepLinkNavigation(to route: AnyRoute) {
-    allCoordinators.forEach { coordinator in
-        coordinator.dismissSheet()
-        coordinator.dismissFullScreen()
+    allRouters.forEach { router in
+        router.dismissSheet()
+        router.dismissFullScreen()
     }
 
     selectedTab = .services
-    servicesCoordinator.navigate(to: route, strategy: .resetStack)
+    servicesRouter.navigate(to: route, strategy: .resetStack)
 }
 ```
 
@@ -287,7 +287,7 @@ No feature package ever depends on another feature's package. Only the App targe
 - **`PresentedNavigationHost` (used for sheets/full-screen) always creates its own fresh `NavigationRouter`.**
   There's no built-in way for a route pushed inside a presented flow to reach back into the presenting stack. If a
   presented flow needs to end by navigating the *parent* somewhere, model that explicitly (dismiss, then have the
-  parent act on a result) rather than assuming the coordinator can call upward.
+  parent act on a result) rather than assuming the router can call upward.
 - **`AnyRoute`'s `==` is value equality** based on the wrapped route's `Hashable` conformance — two pushes of the
   same case with the same associated values are considered the same route (this is what makes `popToIfExists` and
   `popTo(where:)` work). Its `id` (for `Identifiable`) is a fresh `UUID` per wrap, used only so SwiftUI's
@@ -324,7 +324,7 @@ currently wired for the test action:
 xcodebuild test -scheme FeatureY -destination 'platform=iOS Simulator,name=<simulator name>'
 ```
 
-`App/AppComposition.swift` and `Coordinator/AppCoordinator.swift` have no automated test coverage — there is
+`App/AppComposition.swift` and `Router/AppCoordinator.swift` have no automated test coverage — there is
 no Xcode unit test target for the `App` target itself. Verify deep links manually against a booted simulator:
 
 ```

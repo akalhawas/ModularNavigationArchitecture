@@ -11,7 +11,7 @@ import Navigation
 struct UsersView: View {
 
     @StateObject private var viewModel: UsersViewModel
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
     
     init(viewModel: UsersViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -39,7 +39,7 @@ struct UsersView: View {
         } else {
             List(viewModel.users) { user in
                 Button {
-                    coordinator.navigate(to: UsersRoute.userDetail(id: user.id))
+                    router.navigate(to: UsersRoute.userDetail(id: user.id))
                 } label: {
                     UserRow(user: user)
                 }

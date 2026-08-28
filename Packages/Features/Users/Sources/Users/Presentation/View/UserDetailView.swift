@@ -11,7 +11,7 @@ import Navigation
 struct UserDetailView: View {
 
     @StateObject private var viewModel: UserDetailViewModel
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
     
     init(viewModel: UserDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -30,7 +30,7 @@ struct UserDetailView: View {
                 
                 Button {
                     viewModel.notifyDetailAction()
-                    coordinator.pop()
+                    router.pop()
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "chevron.left")

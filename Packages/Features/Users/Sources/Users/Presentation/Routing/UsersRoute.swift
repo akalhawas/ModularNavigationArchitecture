@@ -16,11 +16,11 @@ public enum UsersRoute: Route {
 //        .userDetail(id: id, onDetailAction: ActionCallback(onDetailAction))
 //    }
 
-    public func makeView(coordinator: NavigationRouter) -> some View {
+    public func makeView(router: NavigationRouter) -> some View {
         switch self {
         case .usersList:
             UsersView(viewModel: UsersModule.viewModels().makeUsersViewModel())
-                .environmentObject(coordinator)
+                .environmentObject(router)
         case .userDetail(let id, let onDetailAction):
             UserDetailView(
                 viewModel: UsersModule.viewModels().makeUserDetailViewModel(
@@ -28,7 +28,7 @@ public enum UsersRoute: Route {
                     onDetailAction: onDetailAction
                 )
             )
-            .environmentObject(coordinator)
+            .environmentObject(router)
         }
     }
 }

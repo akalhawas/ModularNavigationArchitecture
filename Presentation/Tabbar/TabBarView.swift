@@ -20,9 +20,8 @@ struct TabBarView: View {
     var body: some View {
         TabView(selection: $appCoordinator.selectedTab) {
 
-            NavigationHost(coordinator: appCoordinator.homeCoordinator) {
+            NavigationHost(router: appCoordinator.homeRouter) {
                 HomeView()
-                    .environmentObject(appCoordinator.homeCoordinator)
             }
             .tabItem {
                 Image(systemName: "house")
@@ -30,9 +29,8 @@ struct TabBarView: View {
             }
             .tag(TabBar.home)
 
-            NavigationHost(coordinator: appCoordinator.servicesCoordinator) {
+            NavigationHost(router: appCoordinator.servicesRouter) {
                 ServicesView()
-                    .environmentObject(appCoordinator.servicesCoordinator)
             }
             .tabItem {
                 Image(systemName: "square.grid.2x2")

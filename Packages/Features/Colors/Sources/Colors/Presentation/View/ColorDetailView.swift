@@ -8,7 +8,7 @@
 import SwiftUI
 import Navigation
 struct ColorDetailView: View {
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
     @StateObject private var viewModel: ColorDetailViewModel
 
     @Environment(\.dismiss) private var dismiss

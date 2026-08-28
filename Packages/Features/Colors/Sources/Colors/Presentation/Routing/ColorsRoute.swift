@@ -12,14 +12,14 @@ public enum ColorsRoute: Route {
     case colorsList
     case colorDetail(id: Int)
 
-    public func makeView(coordinator: NavigationRouter) -> some View {
+    public func makeView(router: NavigationRouter) -> some View {
         switch self {
         case .colorsList:
             ColorsView(viewModel: ColorsModule.viewModels().makeColorsViewModel())
-                .environmentObject(coordinator)
+                .environmentObject(router)
         case .colorDetail(let id):
             ColorDetailView(viewModel: ColorsModule.viewModels().makeColorDetailViewModel(colorId: id))
-                .environmentObject(coordinator)
+                .environmentObject(router)
         }
     }
 }

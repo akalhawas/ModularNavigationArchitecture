@@ -8,11 +8,11 @@ import Navigation
 
 struct ColorsServiceCard: View {
 
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
 
     var body: some View {
         Button {
-            coordinator.navigate(to: ColorsRoute.colorsList)
+            router.navigate(to: ColorsRoute.colorsList)
         } label: {
             HStack(spacing: 14) {
                 ZStack {

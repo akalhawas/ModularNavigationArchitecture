@@ -12,8 +12,6 @@ import Colors
 
 struct ServicesView: View {
 
-    @EnvironmentObject var coordinator: NavigationRouter
-
     var body: some View {
         VStack {
             UsersModule.makeServicesCard()

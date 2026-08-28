@@ -9,7 +9,7 @@ import Navigation
 struct LatestColorsView: View {
 
     @StateObject private var viewModel: LatestColorsViewModel
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
 
     init(viewModel: LatestColorsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -33,7 +33,7 @@ struct LatestColorsView: View {
                 .font(.title2.bold())
             Spacer()
             Button {
-                coordinator.navigate(to: ColorsRoute.colorsList)
+                router.navigate(to: ColorsRoute.colorsList)
             } label: {
                 HStack(spacing: 4) {
                     Text("See All")
@@ -69,7 +69,7 @@ struct LatestColorsView: View {
                 LazyHStack(spacing: 12) {
                     ForEach(viewModel.colors) { color in
                         Button {
-                            coordinator.presentSheet(ColorsRoute.colorDetail(id: color.id))
+                            router.presentSheet(ColorsRoute.colorDetail(id: color.id))
                         } label: {
                             LatestColorCard(color: color)
                         }

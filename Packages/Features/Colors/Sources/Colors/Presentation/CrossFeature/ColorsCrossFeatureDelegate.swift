@@ -9,5 +9,5 @@
 import Navigation
 
 public protocol ColorsCrossFeatureDelegate: AnyObject {
-    func onPrimaryAction(coordinator: NavigationRouter, id: Int)
+    func onPrimaryAction(router: NavigationRouter, id: Int)
 }

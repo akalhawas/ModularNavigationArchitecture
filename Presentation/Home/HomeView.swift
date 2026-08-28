@@ -27,8 +27,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    let appCoordinator = AppCoordinator()
-    let _ = AppComposition.bootstrapFeatures(appCoordinator: appCoordinator)
     HomeView()
-        .environmentObject(appCoordinator)
 }

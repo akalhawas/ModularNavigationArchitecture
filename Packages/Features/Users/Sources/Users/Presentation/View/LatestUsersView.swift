@@ -9,7 +9,7 @@ import Navigation
 struct LatestUsersView: View {
 
     @StateObject private var viewModel: LatestUsersViewModel
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
 
     init(viewModel: LatestUsersViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -33,7 +33,7 @@ struct LatestUsersView: View {
                 .font(.title2.bold())
             Spacer()
             Button {
-                coordinator.navigate(to: UsersRoute.usersList)
+                router.navigate(to: UsersRoute.usersList)
             } label: {
                 HStack(spacing: 4) {
                     Text("See All")
@@ -69,7 +69,7 @@ struct LatestUsersView: View {
                 LazyHStack(spacing: 12) {
                     ForEach(viewModel.users) { user in
                         Button {
-                            coordinator.navigate(to: UsersRoute.userDetail(id: user.id))
+                            router.navigate(to: UsersRoute.userDetail(id: user.id))
                         } label: {
                             LatestUserCard(user: user)
                         }

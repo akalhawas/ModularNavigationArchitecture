@@ -11,7 +11,7 @@ import Navigation
 struct ColorsView: View {
 
     @StateObject private var viewModel: ColorsViewModel
-    @EnvironmentObject var coordinator: NavigationRouter
+    @EnvironmentObject var router: NavigationRouter
 
     init(viewModel: ColorsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -29,7 +29,7 @@ struct ColorsView: View {
 
             if let crossFeatureDelegate = viewModel.crossFeatureDelegate {
                 Button {
-                    crossFeatureDelegate.onPrimaryAction(coordinator: coordinator, id: 2)
+                    crossFeatureDelegate.onPrimaryAction(router: router, id: 2)
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "person.2.fill")
@@ -62,7 +62,7 @@ struct ColorsView: View {
         } else {
             List(viewModel.colors) { color in
                 Button {
-                    coordinator.navigate(to: ColorsRoute.colorDetail(id: color.id))
+                    router.navigate(to: ColorsRoute.colorDetail(id: color.id))
                 } label: {
                     ColorRow(color: color)
                 }

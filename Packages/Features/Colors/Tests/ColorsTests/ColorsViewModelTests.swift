@@ -3,17 +3,16 @@ import XCTest
 import Navigation
 
 private final class StubColorsCrossFeatureDelegate: ColorsCrossFeatureDelegate {
-    func onTertiaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {}
+    func navigateToUsersDetails(router: NavigationRouter, id: Int, onDismiss: @escaping () -> Void) {}
 }
 
 final class ColorsViewModelTests: XCTestCase {
 
     private func makeSUT(
         useCase: MockFetchColorsUseCase = MockFetchColorsUseCase(),
-        crossFeatureActions: ColorsCrossFeatureActions = ColorsCrossFeatureActions(onSecondaryAction: { _, _, _ in }),
         crossFeatureDelegate: ColorsCrossFeatureDelegate? = StubColorsCrossFeatureDelegate()
     ) -> ColorsViewModel {
-        ColorsViewModel(fetchColorsUseCase: useCase, crossFeatureActions: crossFeatureActions, crossFeatureDelegate: crossFeatureDelegate)
+        ColorsViewModel(fetchColorsUseCase: useCase, crossFeatureDelegate: crossFeatureDelegate)
     }
 
     private static let mockColor = AppColor(
@@ -23,6 +22,10 @@ final class ColorsViewModelTests: XCTestCase {
         color: "#98B2D1",
         pantoneValue: "15-4020"
     )
+
+    private static func mockColor(id: Int) -> AppColor {
+        AppColor(id: id, name: "Mock AppColor \(id)", year: 2026, color: "#98B2D1", pantoneValue: "15-4020")
+    }
 
     private static let mockSupport = SupportInfo(url: "https://reqres.in/#support-heading", text: "Mock data")
 
@@ -111,26 +114,21 @@ final class ColorsViewModelTests: XCTestCase {
         XCTAssertEqual(useCase.executeCallCount, 2)
     }
 
-    @MainActor
-    func testExposesTheInjectedCrossFeatureActions() {
+    func testExposesTheInjectedCrossFeatureDelegate() {
         // Arrange
-        var capturedId: Int?
-        let actions = ColorsCrossFeatureActions(onSecondaryAction: { _, id, _ in capturedId = id })
-        let sut = makeSUT(crossFeatureActions: actions)
-
-        // Act
-        sut.crossFeatureActions.onSecondaryAction(NavigationCoordinator(), 7, {})
+        let delegate = StubColorsCrossFeatureDelegate()
+        let sut = makeSUT(crossFeatureDelegate: delegate)
 
         // Assert
-        XCTAssertEqual(capturedId, 7)
+        XCTAssertTrue(sut.crossFeatureDelegate === delegate)
     }
 
     @MainActor
-    func testExposesTheInjectedCrossFeatureDelegate() {
+    func testCrossFeatureDelegateReceivesRequestedId() {
         // Arrange
         final class CapturingDelegate: ColorsCrossFeatureDelegate {
             var capturedId: Int?
-            func onTertiaryAction(coordinator: NavigationCoordinator, id: Int, onReturn: @escaping () -> Void) {
+            func navigateToUsersDetails(router: NavigationRouter, id: Int, onDismiss: @escaping () -> Void) {
                 capturedId = id
             }
         }
@@ -138,9 +136,37 @@ final class ColorsViewModelTests: XCTestCase {
         let sut = makeSUT(crossFeatureDelegate: delegate)
 
         // Act
-        sut.crossFeatureDelegate?.onTertiaryAction(coordinator: NavigationCoordinator(), id: 9, onReturn: {})
+        sut.crossFeatureDelegate?.navigateToUsersDetails(router: NavigationRouter(), id: 9, onDismiss: {})
 
         // Assert
         XCTAssertEqual(delegate.capturedId, 9)
+    }
+
+    func testDidReturnFromActionDropsTheLastColor() {
+        // Arrange
+        let useCase = MockFetchColorsUseCase()
+        let colors = (1...3).map(Self.mockColor(id:))
+        useCase.result = .success(
+            ColorListResponse(page: 1, perPage: 6, total: 3, totalPages: 1, data: colors, support: Self.mockSupport)
+        )
+        let sut = makeSUT(useCase: useCase)
+        sut.fetchColors()
+
+        // Act
+        sut.didReturnFromAction()
+
+        // Assert
+        XCTAssertEqual(sut.colors, Array(colors.prefix(2)))
+    }
+
+    func testDidReturnFromActionOnEmptyColorsIsANoOp() {
+        // Arrange
+        let sut = makeSUT()
+
+        // Act
+        sut.didReturnFromAction()
+
+        // Assert
+        XCTAssertTrue(sut.colors.isEmpty)
     }
 }

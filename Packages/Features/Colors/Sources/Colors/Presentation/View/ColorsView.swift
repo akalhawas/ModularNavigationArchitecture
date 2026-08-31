@@ -29,7 +29,7 @@ struct ColorsView: View {
 
             if let crossFeatureDelegate = viewModel.crossFeatureDelegate {
                 Button {
-                    crossFeatureDelegate.onPrimaryAction(router: router, id: 2)
+                    crossFeatureDelegate.navigateToUsersDetails(router: router, id: 2, onDismiss: viewModel.didReturnFromAction)
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "person.2.fill")

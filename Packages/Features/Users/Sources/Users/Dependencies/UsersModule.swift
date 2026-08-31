@@ -2,6 +2,7 @@ import SwiftUI
 import NetworkService
 import Navigation
 import Combine
+
 /// Resolves this feature's dependencies without callers having to build
 /// `UsersDependencies` themselves at every navigation site.
 ///

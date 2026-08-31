@@ -21,11 +21,11 @@ final class UsersViewModels {
     }
 
     @MainActor
-    func makeUserDetailViewModel(userId: Int, onDetailAction: ActionCallback<Void>? = nil) -> UserDetailViewModel {
+    func makeUserDetailViewModel(userId: Int, onDismiss: ActionCallback<Void>? = nil) -> UserDetailViewModel {
         UserDetailViewModel(
             userId: userId,
             fetchUserDetailUseCase: useCases.fetchUserDetailUseCase,
-            onDetailAction: onDetailAction
+            onDismiss: onDismiss
         )
     }
 

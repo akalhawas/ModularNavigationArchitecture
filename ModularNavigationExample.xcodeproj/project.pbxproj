@@ -433,7 +433,7 @@
 			repositoryURL = "https://github.com/akalhawas/SharedLibraries.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.3;
+				minimumVersion = 0.2.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

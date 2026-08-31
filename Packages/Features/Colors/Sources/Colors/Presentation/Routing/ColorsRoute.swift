@@ -16,10 +16,8 @@ public enum ColorsRoute: Route {
         switch self {
         case .colorsList:
             ColorsView(viewModel: ColorsModule.viewModels().makeColorsViewModel())
-                .environmentObject(router)
         case .colorDetail(let id):
             ColorDetailView(viewModel: ColorsModule.viewModels().makeColorDetailViewModel(colorId: id))
-                .environmentObject(router)
         }
     }
 }

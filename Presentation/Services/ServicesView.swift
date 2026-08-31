@@ -11,7 +11,7 @@ import Users
 import Colors
 
 struct ServicesView: View {
-
+    
     var body: some View {
         VStack {
             UsersModule.makeServicesCard()

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Navigation
+
 enum TabBar: String, CaseIterable, Identifiable {
     case home
     case services
@@ -16,7 +17,7 @@ enum TabBar: String, CaseIterable, Identifiable {
 struct TabBarView: View {
 
     @StateObject var appCoordinator: AppCoordinator = AppCoordinator()
-
+    
     var body: some View {
         TabView(selection: $appCoordinator.selectedTab) {
 

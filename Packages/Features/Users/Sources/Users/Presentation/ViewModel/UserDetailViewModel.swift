@@ -16,21 +16,21 @@ final class UserDetailViewModel: ObservableObject {
 
     private let userId: Int
     private let fetchUserDetailUseCase: FetchUserDetailUseCase
-    private let onDetailAction: ActionCallback<Void>?
+    private let onDismiss: ActionCallback<Void>?
     private var cancellables = Set<AnyCancellable>()
 
     init(
         userId: Int,
         fetchUserDetailUseCase: FetchUserDetailUseCase,
-        onDetailAction: ActionCallback<Void>? = nil
+        onDismiss: ActionCallback<Void>? = nil
     ) {
         self.userId = userId
         self.fetchUserDetailUseCase = fetchUserDetailUseCase
-        self.onDetailAction = onDetailAction
+        self.onDismiss = onDismiss
     }
 
     func notifyDetailAction() {
-        onDetailAction?.fire()
+        onDismiss?.fire()
     }
 
     func fetchUser() {

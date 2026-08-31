@@ -10,25 +10,23 @@ import Navigation
 
 public enum UsersRoute: Route {
     case usersList
-    case userDetail(id: Int, completetion: ActionCallback<Void>? = nil)
+    case userDetail(id: Int, onDismiss: ActionCallback<Void>? = nil)
 
-//    public static func userDetail(id: Int, onDetailAction: @escaping () -> Void) -> UsersRoute {
-//        .userDetail(id: id, onDetailAction: ActionCallback(onDetailAction))
-//    }
+    public static func userDetail(id: Int, onDismiss: @escaping () -> Void) -> UsersRoute {
+        .userDetail(id: id, onDismiss: ActionCallback(onDismiss))
+    }
 
     public func makeView(router: NavigationRouter) -> some View {
         switch self {
         case .usersList:
             UsersView(viewModel: UsersModule.viewModels().makeUsersViewModel())
-                .environmentObject(router)
-        case .userDetail(let id, let onDetailAction):
+        case .userDetail(let id, let onDismiss):
             UserDetailView(
                 viewModel: UsersModule.viewModels().makeUserDetailViewModel(
                     userId: id,
-                    onDetailAction: onDetailAction
+                    onDismiss: onDismiss
                 )
             )
-            .environmentObject(router)
         }
     }
 }

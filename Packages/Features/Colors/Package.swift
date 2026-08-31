@@ -9,7 +9,7 @@ let package = Package(
     products: [
         .library(name: "Colors", targets: ["Colors"]),
     ], dependencies: [
-        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.2.1"),
+        .package(url: "https://github.com/akalhawas/SharedLibraries.git", from: "0.2.3"),
     ],
     targets: [
         .target(

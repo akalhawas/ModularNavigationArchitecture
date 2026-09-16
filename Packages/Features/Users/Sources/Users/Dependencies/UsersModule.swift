@@ -20,3 +20,14 @@ public enum UsersModule {
         viewModels = { dependencies.viewModels }
     }
 }
+
+// MARK: API
+extension UsersModule {
+    public static func latestUsersView(items: Int) -> some View {
+        LatestUsersView(viewModel: viewModels().makeLatestColorsViewModel(limit: items))
+    }
+
+    public static func makeServicesCard() -> some View {
+        UsersServiceCard()
+    }
+}

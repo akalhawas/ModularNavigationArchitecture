@@ -28,4 +28,9 @@ final class UsersViewModels {
             onDismiss: onDismiss
         )
     }
+
+    @MainActor
+    func makeLatestColorsViewModel(limit: Int) -> LatestUsersViewModel {
+        LatestUsersViewModel(fetchUsersUseCase: useCases.fetchUsersUseCase, limit: limit)
+    }
 }

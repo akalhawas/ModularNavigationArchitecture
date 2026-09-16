@@ -5,6 +5,8 @@
 //  Created by ali alhawas on 24/07/2026.
 //
 
+import Navigation
+
 final class ColorsViewModels {
 
     private let useCases: ColorsUseCases
@@ -16,10 +18,12 @@ final class ColorsViewModels {
     }
 
     @MainActor
-    func makeColorsViewModel() -> ColorsViewModel {
-        ColorsViewModel(
+    func makeColorsViewModel(router: NavigationRouter) -> ColorsViewModel {
+        let routing = ColorsRouter(router: router, crossFeatureDelegate: crossFeatureDelegate)
+        return ColorsViewModel(
             fetchColorsUseCase: useCases.fetchColorsUseCase,
-            crossFeatureDelegate: crossFeatureDelegate
+            crossFeatureDelegate: crossFeatureDelegate,
+            router: routing
         )
     }
 

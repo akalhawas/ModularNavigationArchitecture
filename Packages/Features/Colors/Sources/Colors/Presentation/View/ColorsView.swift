@@ -27,13 +27,13 @@ struct ColorsView: View {
                     }
                 }
 
-            if let crossFeatureDelegate = viewModel.crossFeatureDelegate {
+            if let _ = viewModel.crossFeatureDelegate {
                 Button {
-                    crossFeatureDelegate.navigateToUsersDetails(router: router, id: 2, onDismiss: viewModel.didReturnFromAction)
+                    viewModel.trigger(action: .navigateToDetails(id: 1))
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "person.2.fill")
-                        Text("View Users")
+                        Text("Show Users")
                             .fontWeight(.semibold)
                         Spacer()
                         Image(systemName: "chevron.right")
@@ -62,7 +62,7 @@ struct ColorsView: View {
         } else {
             List(viewModel.colors) { color in
                 Button {
-                    router.navigate(to: ColorsRoute.colorDetail(id: color.id))
+                    viewModel.trigger(action: .navigateToDetails(id: color.id))
                 } label: {
                     ColorRow(color: color)
                 }
@@ -119,7 +119,7 @@ extension Color {
         ColorsView(
             viewModel: ColorsViewModel(
                 fetchColorsUseCase: FetchColorsUseCaseImp(repository: ColorRepositoryMock()),
-                crossFeatureDelegate: nil
+                crossFeatureDelegate: nil, router: ColorsRouter(router: NavigationRouter())
             )
         )
     }

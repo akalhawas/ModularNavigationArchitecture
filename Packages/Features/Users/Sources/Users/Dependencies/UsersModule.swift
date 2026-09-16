@@ -18,23 +18,5 @@ public enum UsersModule {
     public static func register(network: NetworkService) {
         let dependencies = UsersDependencies(network: network)
         viewModels = { dependencies.viewModels }
-        registerRouting()
-    }
-    
-    private static func registerRouting() {
-        DeepLinkRouter.shared.register(UsersDeepLinkMapper())
-    }
-}
-
-// MARK: Shared Views
-extension UsersModule {
-    @ViewBuilder
-    public static func headerHomeView(items: Int) -> some View {
-        LatestUsersView(viewModel: viewModels().makeLatestUsersViewModel(limit: items))
-    }
-
-    @ViewBuilder
-    public static func makeServicesCard() -> some View {
-        UsersServiceCard()
     }
 }

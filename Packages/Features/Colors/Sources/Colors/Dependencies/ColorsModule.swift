@@ -32,14 +32,12 @@ public enum ColorsModule {
     }
 }
 
-// MARK: Shared Views
+// MARK: API
 extension ColorsModule {
-    @ViewBuilder
-    public static func headerHomeView(items: Int) -> some View {
+    public static func latestColorsView(items: Int) -> some View {
         LatestColorsView(viewModel: viewModels().makeLatestColorsViewModel(limit: items))
     }
 
-    @ViewBuilder
     public static func makeServicesCard() -> some View {
         ColorsServiceCard()
     }

@@ -28,9 +28,4 @@ final class UsersViewModels {
             onDismiss: onDismiss
         )
     }
-
-    @MainActor
-    func makeLatestUsersViewModel(limit: Int = 10) -> LatestUsersViewModel {
-        LatestUsersViewModel(fetchUsersUseCase: useCases.fetchUsersUseCase, limit: limit)
-    }
 }

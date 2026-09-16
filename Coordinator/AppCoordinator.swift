@@ -40,8 +40,8 @@ extension AppCoordinator {
 }
 
 // MARK: In App Colors Cross-feature
-extension AppCoordinator: ColorsCrossFeatureDelegate {    
-    func navigateToUsersDetails(router: NavigationRouter, id: Int, onDismiss: @escaping () -> Void) {
-        router.navigate(to: UsersRoute.userDetail(id: id, onDismiss: onDismiss), strategy: .push)
+extension AppCoordinator: ColorsCrossFeatureDelegate {
+    func onPrimaryAction(router: NavigationRouter, id: Int, onReturn: @escaping () -> Void) {
+        router.navigate(to: UsersRoute.userDetail(id: id, onDismiss: onReturn), strategy: .push)
     }
 }

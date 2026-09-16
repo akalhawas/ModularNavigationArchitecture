@@ -21,12 +21,7 @@ public enum UsersRoute: Route {
         case .usersList:
             UsersView(viewModel: UsersModule.viewModels().makeUsersViewModel())
         case .userDetail(let id, let onDismiss):
-            UserDetailView(
-                viewModel: UsersModule.viewModels().makeUserDetailViewModel(
-                    userId: id,
-                    onDismiss: onDismiss
-                )
-            )
+            UserDetailView(viewModel: UsersModule.viewModels().makeUserDetailViewModel(userId: id, onDismiss: onDismiss))
         }
     }
 }

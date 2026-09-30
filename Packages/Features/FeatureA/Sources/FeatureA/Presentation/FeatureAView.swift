@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SafariServices
 import Navigation
 import NavigationDestinations
 
@@ -177,6 +178,17 @@ struct FeatureASubSubDetailView: View {
                     .cornerRadius(8)
             }
             
+            Button {
+                coordinator.presentSheet(FeatureARoute.web(urlString: "https://www.apple.com", title: "Apple"))
+            } label: {
+                Text("Present Safari")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
+            
             Spacer()
             Text("Pop:")
                 .padding()
@@ -233,4 +245,49 @@ struct FeatureASubSubDetailView: View {
 
 #Preview {
     FeatureAListView()
+}
+
+struct SafariWebViewRepresentable: UIViewControllerRepresentable {
+ 
+    let urlString: String
+    let title: String?
+ 
+    func makeUIViewController(
+        context: Context
+    ) -> SFSafariViewController {
+ 
+        guard let url = URL(string: urlString) else {
+            fatalError("Invalid URL: \(urlString)")
+        }
+ 
+        let safariViewController = SFSafariViewController(url: url)
+ 
+        if let title {
+            safariViewController.title = title
+        }
+ 
+        safariViewController.delegate = context.coordinator
+        return safariViewController
+    }
+ 
+    func updateUIViewController(
+        _ uiViewController: SFSafariViewController,
+        context: Context
+    ) {
+        context.coordinator.dismiss = context.environment.dismiss
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    /// Dismisses the hosting presentation when Safari's "Done" button is tapped.
+    @MainActor
+    final class Coordinator: NSObject, @preconcurrency SFSafariViewControllerDelegate {
+        var dismiss: DismissAction?
+
+        func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+            dismiss?()
+        }
+    }
 }

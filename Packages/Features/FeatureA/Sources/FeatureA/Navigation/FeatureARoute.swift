@@ -13,6 +13,7 @@ public enum FeatureARoute: Route {
     case firstScreen
     case secondScreen
     case thirdScreen(id: String)
+    case web(urlString: String, title: String? = nil)
 
     public func makeView(coordinator: NavigationCoordinator) -> some View {
         switch self {
@@ -24,6 +25,10 @@ public enum FeatureARoute: Route {
             FeatureASubDetailView().environmentObject(coordinator)
         case .thirdScreen(let id):
             FeatureASubSubDetailView(flightID: id).environmentObject(coordinator)
+        case .web(let urlString, let title):
+            SafariWebViewRepresentable(urlString: urlString, title: title)
+                .ignoresSafeArea()
+                .toolbar(.hidden, for: .navigationBar)
         }
     }
 }

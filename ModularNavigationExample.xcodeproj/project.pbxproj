@@ -25,6 +25,7 @@
 			membershipExceptions = (
 				Home/HomeView.swift,
 				Services/ServicesView.swift,
+				SplitView/SplitViewExampleView.swift,
 				Tapbar/TabBarView.swift,
 			);
 			target = 2304AFCF3000D14D00423F1C /* ModularNavigationExample */;

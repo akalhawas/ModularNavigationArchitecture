@@ -37,6 +37,17 @@ struct ServicesView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
+
+            Button {
+                coordinator.servicesCoordinator.navigate(to: SplitViewRoute.splitView)
+            } label: {
+                Text("Split View")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
             Spacer()
         }
         .padding()
